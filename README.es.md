@@ -8,6 +8,15 @@ tu IMC y de tu objetivo.
 
 Flutter (Android, iOS y web) + Supabase + Claude para el reconocimiento.
 
+<p align="center">
+  <img src="docs/screenshots/diary.png" width="200" alt="Resumen del día">
+  <img src="docs/screenshots/meals.png" width="200" alt="Comidas del día">
+  <img src="docs/screenshots/verdict.png" width="200" alt="Veredicto de una comida">
+  <img src="docs/screenshots/progress.png" width="200" alt="IMC y progreso semanal">
+</p>
+
+<p align="center"><sub>Resumen del día · comidas · veredicto de una comida · IMC y progreso semanal (modo demo)</sub></p>
+
 ## Cómo está repartido el trabajo
 
 Esta es la decisión de diseño que sostiene todo lo demás:

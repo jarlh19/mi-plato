@@ -8,6 +8,15 @@ BMI and your goal.
 
 Flutter (Android, iOS and web) + Supabase + Claude for image recognition.
 
+<p align="center">
+  <img src="docs/screenshots/diary.png" width="200" alt="Daily summary">
+  <img src="docs/screenshots/meals.png" width="200" alt="Meals of the day">
+  <img src="docs/screenshots/verdict.png" width="200" alt="Meal verdict">
+  <img src="docs/screenshots/progress.png" width="200" alt="BMI and weekly progress">
+</p>
+
+<p align="center"><sub>Daily summary · meals · verdict for a meal · BMI and weekly progress (demo mode)</sub></p>
+
 ## How the work is split
 
 This is the design decision everything else rests on:
