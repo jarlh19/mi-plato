@@ -1,0 +1,42 @@
+name: CI
+
+# Verifica, no despliega. Publicar la app y dar de alta claves son decisiones
+# aparte y manuales.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Un push nuevo cancela la corrida anterior de la misma rama: sin esto, varios
+# push seguidos dejan corridas viejas compitiendo por el runner.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  calidad:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Versión fija, la misma que la máquina donde se desarrolla. Con `stable`
+      # a secas, el día que Flutter saque una versión nueva el CI cambiaría de
+      # compilador sin que nadie lo decida, y un fallo así cuesta encontrarlo.
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.44.6
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+
+      # `--output=none` comprueba sin reescribir: el CI avisa, no corrige.
+      # Para arreglarlo en local basta `dart format .`.
+      - name: Formato
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Análisis estático
+        run: flutter analyze
+
+      - name: Pruebas
+        run: flutter test
