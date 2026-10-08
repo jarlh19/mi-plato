@@ -15,9 +15,15 @@ concurrency:
 
 jobs:
   calidad:
-    runs-on: ubuntu-latest
+    # Versión fija y no `ubuntu-latest`: esa etiqueta pasa a Ubuntu 26 el
+    # 19-oct-2026, y un cambio de sistema operativo bajo los pies del CI se
+    # descubre con una corrida roja sin que nadie haya tocado el código.
+    # Migrar es cambiar este número, cuando convenga y no por sorpresa.
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      # v5 en vez de v4: la v4 corre sobre Node 20, ya obsoleto, y GitHub la
+      # está forzando a Node 24 con un aviso en cada corrida.
+      - uses: actions/checkout@v5
 
       # Versión fija, la misma que la máquina donde se desarrolla. Con `stable`
       # a secas, el día que Flutter saque una versión nueva el CI cambiaría de
