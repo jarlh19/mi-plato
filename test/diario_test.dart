@@ -8,8 +8,10 @@ import 'package:mi_plato/datos/repos/repos.dart';
 void main() {
   group('tabla local', () {
     test('busca ignorando tildes y mayúsculas', () {
-      expect(buscarLocal('platano').map((a) => a.nombre),
-          contains('Plátano o banano'));
+      expect(
+        buscarLocal('platano').map((a) => a.nombre),
+        contains('Plátano o banano'),
+      );
       expect(buscarLocal('BRÓCOLI'), isNotEmpty);
     });
 
@@ -58,13 +60,15 @@ void main() {
 
     test('registrar y leer una comida del día', () async {
       final ahora = DateTime.now();
-      await diario.guardar(Comida(
-        id: '',
-        perfilId: 'p1',
-        fecha: ahora,
-        tipo: TipoComida.almuerzo,
-        alimentos: [porNombre('Pizza')!.aAlimento(cantidad: 200)],
-      ));
+      await diario.guardar(
+        Comida(
+          id: '',
+          perfilId: 'p1',
+          fecha: ahora,
+          tipo: TipoComida.almuerzo,
+          alimentos: [porNombre('Pizza')!.aAlimento(cantidad: 200)],
+        ),
+      );
 
       final hoy = await diario.comidasDe('p1', ahora);
       expect(hoy, hasLength(1));
@@ -80,13 +84,15 @@ void main() {
     });
 
     test('el resumen incluye los días sin registro', () async {
-      await diario.guardar(Comida(
-        id: '',
-        perfilId: 'p1',
-        fecha: DateTime.now(),
-        tipo: TipoComida.cena,
-        alimentos: [porNombre('Manzana')!.aAlimento()],
-      ));
+      await diario.guardar(
+        Comida(
+          id: '',
+          perfilId: 'p1',
+          fecha: DateTime.now(),
+          tipo: TipoComida.cena,
+          alimentos: [porNombre('Manzana')!.aAlimento()],
+        ),
+      );
 
       final semana = await diario.resumen('p1', dias: 7);
       expect(semana, hasLength(7));
@@ -115,7 +121,10 @@ void main() {
 
     test('no deja entrar con la contraseña equivocada', () async {
       await auth.registrar(
-          nombre: 'Ana', email: 'ana@ejemplo.com', clave: 'secreta');
+        nombre: 'Ana',
+        email: 'ana@ejemplo.com',
+        clave: 'secreta',
+      );
       expect(
         () => auth.iniciarSesion(email: 'ana@ejemplo.com', clave: 'otra'),
         throwsA(isA<ErrorApp>()),
@@ -124,7 +133,9 @@ void main() {
 
     test('la cuenta demo llega con historial para las gráficas', () async {
       final perfil = await auth.iniciarSesion(
-          email: AlmacenMemoria.emailDemo, clave: 'demo1234');
+        email: AlmacenMemoria.emailDemo,
+        clave: 'demo1234',
+      );
       expect(perfil.perfilCompleto, isTrue);
       expect(await diario.pesos(perfil.id), hasLength(greaterThan(2)));
       final semana = await diario.resumen(perfil.id, dias: 7);
@@ -141,8 +152,10 @@ void main() {
     });
 
     test('las porciones esperadas del día suman uno', () {
-      final suma = TipoComida.values
-          .fold(0.0, (acc, t) => acc + t.porcionDelDia);
+      final suma = TipoComida.values.fold(
+        0.0,
+        (acc, t) => acc + t.porcionDelDia,
+      );
       expect(suma, closeTo(1.0, 0.001));
     });
   });

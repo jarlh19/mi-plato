@@ -23,24 +23,24 @@ void main() {
     List<(String, double)> partes, {
     TipoComida tipo = TipoComida.almuerzo,
     double confianza = 1,
-  }) =>
-      Comida(
-        id: 'c1',
-        perfilId: 'p1',
-        fecha: DateTime(2026, 8, 31, 13),
-        tipo: tipo,
-        // Por el mismo camino que la app: así las cantidades de una bebida se
-        // leen en mililitros y la densidad entra en la cuenta.
-        alimentos: [
-          for (final (nombre, cantidad) in partes)
-            porNombre(nombre)!
-                .aAlimento(cantidad: cantidad)
-                .copiar(confianza: confianza),
-        ],
-      );
+  }) => Comida(
+    id: 'c1',
+    perfilId: 'p1',
+    fecha: DateTime(2026, 8, 31, 13),
+    tipo: tipo,
+    // Por el mismo camino que la app: así las cantidades de una bebida se
+    // leen en mililitros y la densidad entra en la cuenta.
+    alimentos: [
+      for (final (nombre, cantidad) in partes)
+        porNombre(
+          nombre,
+        )!.aAlimento(cantidad: cantidad).copiar(confianza: confianza),
+    ],
+  );
 
   bool tiene(Veredicto v, Severidad nivel, String fragmento) => v.puntos.any(
-      (p) => p.nivel == nivel && p.texto.toLowerCase().contains(fragmento));
+    (p) => p.nivel == nivel && p.texto.toLowerCase().contains(fragmento),
+  );
 
   group('comida suelta', () {
     test('sin alimentos no inventa veredicto', () {
@@ -132,8 +132,11 @@ void main() {
 
   group('día completo', () {
     test('sin comidas no juzga nada', () {
-      final v =
-          evaluarDia(comidas: const [], perfil: jorge, meta: metaDiaria(jorge));
+      final v = evaluarDia(
+        comidas: const [],
+        perfil: jorge,
+        meta: metaDiaria(jorge),
+      );
       expect(v.puntos, isEmpty);
       expect(v.resumen, contains('Aún no'));
     });
@@ -153,7 +156,9 @@ void main() {
 
     test('avisa del día muy por debajo', () {
       final v = evaluarDia(
-        comidas: [comidaCon([('Manzana', 150)])],
+        comidas: [
+          comidaCon([('Manzana', 150)]),
+        ],
         perfil: jorge,
         meta: metaDiaria(jorge),
       );
@@ -176,10 +181,11 @@ void main() {
         ritmoRealSemanal([
           RegistroPeso(id: '1', perfilId: 'p1', fecha: base, pesoKg: 85),
           RegistroPeso(
-              id: '2',
-              perfilId: 'p1',
-              fecha: base.add(const Duration(days: 3)),
-              pesoKg: 84),
+            id: '2',
+            perfilId: 'p1',
+            fecha: base.add(const Duration(days: 3)),
+            pesoKg: 84,
+          ),
         ]),
         isNull,
       );
@@ -190,10 +196,11 @@ void main() {
       final ritmo = ritmoRealSemanal([
         RegistroPeso(id: '1', perfilId: 'p1', fecha: base, pesoKg: 85),
         RegistroPeso(
-            id: '2',
-            perfilId: 'p1',
-            fecha: base.add(const Duration(days: 14)),
-            pesoKg: 84),
+          id: '2',
+          perfilId: 'p1',
+          fecha: base.add(const Duration(days: 14)),
+          pesoKg: 84,
+        ),
       ]);
       expect(ritmo, closeTo(-0.5, 0.001));
     });

@@ -63,8 +63,9 @@ class _BuscadorEstado extends State<_Buscador> {
                       'Nada con ese nombre. La tabla local cubre platos '
                       'comunes; para el resto, la foto reconoce más.',
                       textAlign: TextAlign.center,
-                      style: t.bodyMedium
-                          ?.copyWith(color: esquema.onSurfaceVariant),
+                      style: t.bodyMedium?.copyWith(
+                        color: esquema.onSurfaceVariant,
+                      ),
                     ),
                   ),
                 )
@@ -83,8 +84,9 @@ class _BuscadorEstado extends State<_Buscador> {
                       ),
                       trailing: Text(
                         '${base.por100g.kcal.round()} kcal/100 g',
-                        style: t.bodySmall
-                            ?.copyWith(color: esquema.onSurfaceVariant),
+                        style: t.bodySmall?.copyWith(
+                          color: esquema.onSurfaceVariant,
+                        ),
                       ),
                       onTap: () => Navigator.pop(context, porcion),
                     );

@@ -105,7 +105,8 @@ void main() {
 
     test('los macros suman las calorías de la meta', () {
       final meta = metaDiaria(jorge);
-      final suma = meta.proteina * kcalPorGramoProteina +
+      final suma =
+          meta.proteina * kcalPorGramoProteina +
           meta.carbohidratos * kcalPorGramoCarbohidrato +
           meta.grasa * kcalPorGramoGrasa;
       expect(suma, closeTo(meta.kcal, 1));
@@ -113,11 +114,15 @@ void main() {
 
     test('las condiciones endurecen los topes', () {
       final base = metaDiaria(jorge);
-      final conTodo = metaDiaria(jorge.copiar(condiciones: {
-        Condicion.hipertension,
-        Condicion.diabetes,
-        Condicion.colesterolAlto,
-      }));
+      final conTodo = metaDiaria(
+        jorge.copiar(
+          condiciones: {
+            Condicion.hipertension,
+            Condicion.diabetes,
+            Condicion.colesterolAlto,
+          },
+        ),
+      );
       expect(base.sodioMax, 2000);
       expect(conTodo.sodioMax, 1500);
       expect(conTodo.azucarMax, lessThan(base.azucarMax));
@@ -126,8 +131,10 @@ void main() {
 
     test('el ritmo semanal traduce el déficit a kilos', () {
       final meta = metaDiaria(jorge);
-      expect(meta.ritmoSemanalKg,
-          closeTo(meta.deficit * 7 / kcalPorKiloDeGrasa, 0.001));
+      expect(
+        meta.ritmoSemanalKg,
+        closeTo(meta.deficit * 7 / kcalPorKiloDeGrasa, 0.001),
+      );
       // Un déficit del 20% sobre ~2400 kcal ronda el medio kilo semanal.
       expect(meta.ritmoSemanalKg, inInclusiveRange(0.3, 0.6));
     });

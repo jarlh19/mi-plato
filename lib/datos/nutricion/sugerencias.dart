@@ -85,11 +85,11 @@ HuecoDelDia huecoDelDia({
 }
 
 bool _yaPaso(TipoComida t, int hora) => switch (t) {
-      TipoComida.desayuno => hora >= 11,
-      TipoComida.almuerzo => hora >= 16,
-      TipoComida.cena => hora >= 23,
-      TipoComida.snack => false,
-    };
+  TipoComida.desayuno => hora >= 11,
+  TipoComida.almuerzo => hora >= 16,
+  TipoComida.cena => hora >= 23,
+  TipoComida.snack => false,
+};
 
 /// Una propuesta de qué comer, antes de comprobar si encaja.
 ///
@@ -145,7 +145,8 @@ List<SugerenciaEvaluada> evaluarSugerencias(
   HuecoDelDia hueco,
 ) {
   return [
-    for (final s in propuestas) SugerenciaEvaluada(s, rechazo: _revisar(s, hueco)),
+    for (final s in propuestas)
+      SugerenciaEvaluada(s, rechazo: _revisar(s, hueco)),
   ];
 }
 
@@ -199,11 +200,15 @@ class Sugerencias {
   /// Texto libre del modelo sobre el conjunto. Puede venir vacío.
   final String nota;
 
-  List<Sugerencia> get aceptadas =>
-      [for (final e in evaluadas) if (e.aceptada) e.sugerencia];
+  List<Sugerencia> get aceptadas => [
+    for (final e in evaluadas)
+      if (e.aceptada) e.sugerencia,
+  ];
 
-  List<SugerenciaEvaluada> get descartadas =>
-      [for (final e in evaluadas) if (!e.aceptada) e];
+  List<SugerenciaEvaluada> get descartadas => [
+    for (final e in evaluadas)
+      if (!e.aceptada) e,
+  ];
 
   bool get vacio => aceptadas.isEmpty;
 }

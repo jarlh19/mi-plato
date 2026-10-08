@@ -110,16 +110,13 @@ void main() {
           .map((a) => a.nombre)
           .toSet();
 
-      expect(
-        liquidos,
-        {
-          'Aceite vegetal',
-          'Café sin azúcar',
-          'Gaseosa',
-          'Jugo de fruta natural',
-          'Leche entera',
-        },
-      );
+      expect(liquidos, {
+        'Aceite vegetal',
+        'Café sin azúcar',
+        'Gaseosa',
+        'Jugo de fruta natural',
+        'Leche entera',
+      });
     });
 
     test('ninguna densidad se sale de lo físicamente posible', () {

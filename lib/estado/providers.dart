@@ -211,8 +211,8 @@ class SugerenciasNotifier extends AsyncNotifier<Sugerencias?> {
 
 final sugerenciasProvider =
     AsyncNotifierProvider<SugerenciasNotifier, Sugerencias?>(
-  SugerenciasNotifier.new,
-);
+      SugerenciasNotifier.new,
+    );
 
 // --- Borrador de comida ---------------------------------------------------
 

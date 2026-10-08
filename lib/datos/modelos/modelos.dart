@@ -24,9 +24,9 @@ enum NivelActividad {
 }
 
 NivelActividad actividadDesde(String? v) => NivelActividad.values.firstWhere(
-      (n) => n.name == v,
-      orElse: () => NivelActividad.ligero,
-    );
+  (n) => n.name == v,
+  orElse: () => NivelActividad.ligero,
+);
 
 enum Objetivo {
   bajarPeso('Bajar peso'),
@@ -38,9 +38,9 @@ enum Objetivo {
 }
 
 Objetivo objetivoDesde(String? v) => Objetivo.values.firstWhere(
-      (o) => o.name == v,
-      orElse: () => Objetivo.mantener,
-    );
+  (o) => o.name == v,
+  orElse: () => Objetivo.mantener,
+);
 
 /// Condiciones que endurecen algunos límites diarios (sodio, azúcar, grasa
 /// saturada). No son un diagnóstico: las marca la persona en su perfil.
@@ -75,9 +75,9 @@ enum TipoComida {
 }
 
 TipoComida tipoComidaDesde(String? v) => TipoComida.values.firstWhere(
-      (t) => t.name == v,
-      orElse: () => TipoComida.almuerzo,
-    );
+  (t) => t.name == v,
+  orElse: () => TipoComida.almuerzo,
+);
 
 /// Sugiere el tipo de comida por la hora, para no obligar a elegirlo a mano.
 TipoComida tipoComidaPorHora(DateTime f) {
@@ -120,51 +120,51 @@ class Nutrientes {
   static const cero = Nutrientes();
 
   Nutrientes operator +(Nutrientes o) => Nutrientes(
-        kcal: kcal + o.kcal,
-        proteina: proteina + o.proteina,
-        carbohidratos: carbohidratos + o.carbohidratos,
-        azucares: azucares + o.azucares,
-        grasa: grasa + o.grasa,
-        saturada: saturada + o.saturada,
-        fibra: fibra + o.fibra,
-        sodio: sodio + o.sodio,
-      );
+    kcal: kcal + o.kcal,
+    proteina: proteina + o.proteina,
+    carbohidratos: carbohidratos + o.carbohidratos,
+    azucares: azucares + o.azucares,
+    grasa: grasa + o.grasa,
+    saturada: saturada + o.saturada,
+    fibra: fibra + o.fibra,
+    sodio: sodio + o.sodio,
+  );
 
   Nutrientes operator *(double f) => Nutrientes(
-        kcal: kcal * f,
-        proteina: proteina * f,
-        carbohidratos: carbohidratos * f,
-        azucares: azucares * f,
-        grasa: grasa * f,
-        saturada: saturada * f,
-        fibra: fibra * f,
-        sodio: sodio * f,
-      );
+    kcal: kcal * f,
+    proteina: proteina * f,
+    carbohidratos: carbohidratos * f,
+    azucares: azucares * f,
+    grasa: grasa * f,
+    saturada: saturada * f,
+    fibra: fibra * f,
+    sodio: sodio * f,
+  );
 
   bool get vacio =>
       kcal == 0 && proteina == 0 && carbohidratos == 0 && grasa == 0;
 
   factory Nutrientes.desdeJson(Map<String, dynamic> j) => Nutrientes(
-        kcal: _num(j['kcal']),
-        proteina: _num(j['proteina']),
-        carbohidratos: _num(j['carbohidratos']),
-        azucares: _num(j['azucares']),
-        grasa: _num(j['grasa']),
-        saturada: _num(j['saturada']),
-        fibra: _num(j['fibra']),
-        sodio: _num(j['sodio']),
-      );
+    kcal: _num(j['kcal']),
+    proteina: _num(j['proteina']),
+    carbohidratos: _num(j['carbohidratos']),
+    azucares: _num(j['azucares']),
+    grasa: _num(j['grasa']),
+    saturada: _num(j['saturada']),
+    fibra: _num(j['fibra']),
+    sodio: _num(j['sodio']),
+  );
 
   Map<String, dynamic> aJson() => {
-        'kcal': kcal,
-        'proteina': proteina,
-        'carbohidratos': carbohidratos,
-        'azucares': azucares,
-        'grasa': grasa,
-        'saturada': saturada,
-        'fibra': fibra,
-        'sodio': sodio,
-      };
+    'kcal': kcal,
+    'proteina': proteina,
+    'carbohidratos': carbohidratos,
+    'azucares': azucares,
+    'grasa': grasa,
+    'saturada': saturada,
+    'fibra': fibra,
+    'sodio': sodio,
+  };
 }
 
 double _num(Object? v) => v is num ? v.toDouble() : 0;
@@ -181,9 +181,9 @@ enum FuenteDatos {
 }
 
 FuenteDatos fuenteDesde(String? v) => FuenteDatos.values.firstWhere(
-      (f) => f.name == v,
-      orElse: () => FuenteDatos.modelo,
-    );
+  (f) => f.name == v,
+  orElse: () => FuenteDatos.modelo,
+);
 
 /// Un alimento reconocido dentro de una foto.
 class Alimento {
@@ -254,37 +254,37 @@ class Alimento {
     Nutrientes? por100g,
     FuenteDatos? fuente,
     double? confianza,
-  }) =>
-      Alimento(
-        nombre: nombre ?? this.nombre,
-        gramos: gramos ?? this.gramos,
-        por100g: por100g ?? this.por100g,
-        densidad: densidad,
-        fuente: fuente ?? this.fuente,
-        confianza: confianza ?? this.confianza,
-        referencia: referencia,
-      );
+  }) => Alimento(
+    nombre: nombre ?? this.nombre,
+    gramos: gramos ?? this.gramos,
+    por100g: por100g ?? this.por100g,
+    densidad: densidad,
+    fuente: fuente ?? this.fuente,
+    confianza: confianza ?? this.confianza,
+    referencia: referencia,
+  );
 
   factory Alimento.desdeJson(Map<String, dynamic> j) => Alimento(
-        nombre: (j['nombre'] ?? '') as String,
-        gramos: _num(j['gramos']),
-        por100g: Nutrientes.desdeJson(
-            (j['por_100g'] ?? const <String, dynamic>{}) as Map<String, dynamic>),
-        densidad: _num(j['densidad']),
-        fuente: fuenteDesde(j['fuente'] as String?),
-        confianza: _num(j['confianza']),
-        referencia: (j['referencia'] ?? '') as String,
-      );
+    nombre: (j['nombre'] ?? '') as String,
+    gramos: _num(j['gramos']),
+    por100g: Nutrientes.desdeJson(
+      (j['por_100g'] ?? const <String, dynamic>{}) as Map<String, dynamic>,
+    ),
+    densidad: _num(j['densidad']),
+    fuente: fuenteDesde(j['fuente'] as String?),
+    confianza: _num(j['confianza']),
+    referencia: (j['referencia'] ?? '') as String,
+  );
 
   Map<String, dynamic> aJson() => {
-        'nombre': nombre,
-        'gramos': gramos,
-        'por_100g': por100g.aJson(),
-        'densidad': densidad,
-        'fuente': fuente.name,
-        'confianza': confianza,
-        'referencia': referencia,
-      };
+    'nombre': nombre,
+    'gramos': gramos,
+    'por_100g': por100g.aJson(),
+    'densidad': densidad,
+    'fuente': fuente.name,
+    'confianza': confianza,
+    'referencia': referencia,
+  };
 }
 
 /// Una comida registrada: la foto, lo que el modelo reconoció en ella y las
@@ -326,38 +326,37 @@ class Comida {
     List<Alimento>? alimentos,
     String? fotoUrl,
     DateTime? fecha,
-  }) =>
-      Comida(
-        id: id,
-        perfilId: perfilId,
-        fecha: fecha ?? this.fecha,
-        tipo: tipo ?? this.tipo,
-        alimentos: alimentos ?? this.alimentos,
-        fotoUrl: fotoUrl ?? this.fotoUrl,
-        descripcion: descripcion,
-      );
+  }) => Comida(
+    id: id,
+    perfilId: perfilId,
+    fecha: fecha ?? this.fecha,
+    tipo: tipo ?? this.tipo,
+    alimentos: alimentos ?? this.alimentos,
+    fotoUrl: fotoUrl ?? this.fotoUrl,
+    descripcion: descripcion,
+  );
 
   factory Comida.desdeJson(Map<String, dynamic> j) => Comida(
-        id: j['id'] as String,
-        perfilId: (j['perfil_id'] ?? '') as String,
-        fecha: DateTime.parse(j['fecha'] as String).toLocal(),
-        tipo: tipoComidaDesde(j['tipo'] as String?),
-        alimentos: ((j['alimentos'] ?? const []) as List)
-            .map((a) => Alimento.desdeJson(a as Map<String, dynamic>))
-            .toList(),
-        fotoUrl: (j['foto_url'] ?? '') as String,
-        descripcion: (j['descripcion'] ?? '') as String,
-      );
+    id: j['id'] as String,
+    perfilId: (j['perfil_id'] ?? '') as String,
+    fecha: DateTime.parse(j['fecha'] as String).toLocal(),
+    tipo: tipoComidaDesde(j['tipo'] as String?),
+    alimentos: ((j['alimentos'] ?? const []) as List)
+        .map((a) => Alimento.desdeJson(a as Map<String, dynamic>))
+        .toList(),
+    fotoUrl: (j['foto_url'] ?? '') as String,
+    descripcion: (j['descripcion'] ?? '') as String,
+  );
 
   Map<String, dynamic> aJson() => {
-        'id': id,
-        'perfil_id': perfilId,
-        'fecha': fecha.toUtc().toIso8601String(),
-        'tipo': tipo.name,
-        'alimentos': alimentos.map((a) => a.aJson()).toList(),
-        'foto_url': fotoUrl,
-        'descripcion': descripcion,
-      };
+    'id': id,
+    'perfil_id': perfilId,
+    'fecha': fecha.toUtc().toIso8601String(),
+    'tipo': tipo.name,
+    'alimentos': alimentos.map((a) => a.aJson()).toList(),
+    'foto_url': fotoUrl,
+    'descripcion': descripcion,
+  };
 }
 
 /// Perfil de la persona. Los datos antropométricos no son decorativos: de
@@ -396,33 +395,33 @@ class Perfil {
   final bool perfilCompleto;
 
   factory Perfil.desdeJson(Map<String, dynamic> j) => Perfil(
-        id: j['id'] as String,
-        nombre: (j['nombre'] ?? '') as String,
-        sexo: sexoDesde(j['sexo'] as String?),
-        edad: (j['edad'] as num?)?.toInt() ?? 30,
-        alturaCm: _num(j['altura_cm']),
-        pesoKg: _num(j['peso_kg']),
-        actividad: actividadDesde(j['actividad'] as String?),
-        objetivo: objetivoDesde(j['objetivo'] as String?),
-        condiciones: ((j['condiciones'] ?? const []) as List)
-            .map((c) => condicionDesde(c as String))
-            .whereType<Condicion>()
-            .toSet(),
-        perfilCompleto: (j['perfil_completo'] ?? false) as bool,
-      );
+    id: j['id'] as String,
+    nombre: (j['nombre'] ?? '') as String,
+    sexo: sexoDesde(j['sexo'] as String?),
+    edad: (j['edad'] as num?)?.toInt() ?? 30,
+    alturaCm: _num(j['altura_cm']),
+    pesoKg: _num(j['peso_kg']),
+    actividad: actividadDesde(j['actividad'] as String?),
+    objetivo: objetivoDesde(j['objetivo'] as String?),
+    condiciones: ((j['condiciones'] ?? const []) as List)
+        .map((c) => condicionDesde(c as String))
+        .whereType<Condicion>()
+        .toSet(),
+    perfilCompleto: (j['perfil_completo'] ?? false) as bool,
+  );
 
   Map<String, dynamic> aJson() => {
-        'id': id,
-        'nombre': nombre,
-        'sexo': sexo.name,
-        'edad': edad,
-        'altura_cm': alturaCm,
-        'peso_kg': pesoKg,
-        'actividad': actividad.name,
-        'objetivo': objetivo.name,
-        'condiciones': condiciones.map((c) => c.name).toList(),
-        'perfil_completo': perfilCompleto,
-      };
+    'id': id,
+    'nombre': nombre,
+    'sexo': sexo.name,
+    'edad': edad,
+    'altura_cm': alturaCm,
+    'peso_kg': pesoKg,
+    'actividad': actividad.name,
+    'objetivo': objetivo.name,
+    'condiciones': condiciones.map((c) => c.name).toList(),
+    'perfil_completo': perfilCompleto,
+  };
 
   Perfil copiar({
     String? nombre,
@@ -434,19 +433,18 @@ class Perfil {
     Objetivo? objetivo,
     Set<Condicion>? condiciones,
     bool? perfilCompleto,
-  }) =>
-      Perfil(
-        id: id,
-        nombre: nombre ?? this.nombre,
-        sexo: sexo ?? this.sexo,
-        edad: edad ?? this.edad,
-        alturaCm: alturaCm ?? this.alturaCm,
-        pesoKg: pesoKg ?? this.pesoKg,
-        actividad: actividad ?? this.actividad,
-        objetivo: objetivo ?? this.objetivo,
-        condiciones: condiciones ?? this.condiciones,
-        perfilCompleto: perfilCompleto ?? this.perfilCompleto,
-      );
+  }) => Perfil(
+    id: id,
+    nombre: nombre ?? this.nombre,
+    sexo: sexo ?? this.sexo,
+    edad: edad ?? this.edad,
+    alturaCm: alturaCm ?? this.alturaCm,
+    pesoKg: pesoKg ?? this.pesoKg,
+    actividad: actividad ?? this.actividad,
+    objetivo: objetivo ?? this.objetivo,
+    condiciones: condiciones ?? this.condiciones,
+    perfilCompleto: perfilCompleto ?? this.perfilCompleto,
+  );
 }
 
 /// Un pesaje. El historial es lo que permite dibujar el progreso y comprobar
@@ -465,18 +463,18 @@ class RegistroPeso {
   final double pesoKg;
 
   factory RegistroPeso.desdeJson(Map<String, dynamic> j) => RegistroPeso(
-        id: j['id'] as String,
-        perfilId: (j['perfil_id'] ?? '') as String,
-        fecha: DateTime.parse(j['fecha'] as String).toLocal(),
-        pesoKg: _num(j['peso_kg']),
-      );
+    id: j['id'] as String,
+    perfilId: (j['perfil_id'] ?? '') as String,
+    fecha: DateTime.parse(j['fecha'] as String).toLocal(),
+    pesoKg: _num(j['peso_kg']),
+  );
 
   Map<String, dynamic> aJson() => {
-        'id': id,
-        'perfil_id': perfilId,
-        'fecha': Fmt.soloFecha(fecha).toIso8601String(),
-        'peso_kg': pesoKg,
-      };
+    'id': id,
+    'perfil_id': perfilId,
+    'fecha': Fmt.soloFecha(fecha).toIso8601String(),
+    'peso_kg': pesoKg,
+  };
 }
 
 /// Total de un día, para las tarjetas de progreso.

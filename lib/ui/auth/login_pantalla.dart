@@ -81,19 +81,26 @@ class _LoginPantallaEstado extends ConsumerState<LoginPantalla> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Icon(Icons.restaurant_menu,
-                        size: 56, color: esquema.primary),
+                    Icon(
+                      Icons.restaurant_menu,
+                      size: 56,
+                      color: esquema.primary,
+                    ),
                     const SizedBox(height: 16),
-                    Text(Config.nombreApp,
-                        style: t.headlineMedium
-                            ?.copyWith(fontWeight: FontWeight.w700),
-                        textAlign: TextAlign.center),
+                    Text(
+                      Config.nombreApp,
+                      style: t.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                     const SizedBox(height: 6),
                     Text(
                       'Fotografía tu plato y mira cómo encaja en tu día.',
                       textAlign: TextAlign.center,
-                      style: t.bodyMedium
-                          ?.copyWith(color: esquema.onSurfaceVariant),
+                      style: t.bodyMedium?.copyWith(
+                        color: esquema.onSurfaceVariant,
+                      ),
                     ),
                     const SizedBox(height: 28),
                     if (_registrando) ...[
@@ -120,11 +127,11 @@ class _LoginPantallaEstado extends ConsumerState<LoginPantalla> {
                     TextFormField(
                       controller: _clave,
                       obscureText: true,
-                      decoration:
-                          const InputDecoration(labelText: 'Contraseña'),
-                      validator: (v) => (v ?? '').length < 6
-                          ? 'Mínimo 6 caracteres'
-                          : null,
+                      decoration: const InputDecoration(
+                        labelText: 'Contraseña',
+                      ),
+                      validator: (v) =>
+                          (v ?? '').length < 6 ? 'Mínimo 6 caracteres' : null,
                     ),
                     const SizedBox(height: 20),
                     FilledButton(
@@ -133,18 +140,19 @@ class _LoginPantallaEstado extends ConsumerState<LoginPantalla> {
                           ? const SizedBox(
                               height: 20,
                               width: 20,
-                              child:
-                                  CircularProgressIndicator(strokeWidth: 2))
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
                           : Text(_registrando ? 'Crear cuenta' : 'Entrar'),
                     ),
                     TextButton(
                       onPressed: _ocupado
                           ? null
-                          : () =>
-                              setState(() => _registrando = !_registrando),
-                      child: Text(_registrando
-                          ? 'Ya tengo cuenta'
-                          : 'Crear una cuenta nueva'),
+                          : () => setState(() => _registrando = !_registrando),
+                      child: Text(
+                        _registrando
+                            ? 'Ya tengo cuenta'
+                            : 'Crear una cuenta nueva',
+                      ),
                     ),
                     if (Config.modoDemo) ...[
                       const Divider(height: 32),
@@ -153,8 +161,9 @@ class _LoginPantallaEstado extends ConsumerState<LoginPantalla> {
                         'una cuenta de ejemplo que ya tiene una semana de '
                         'registros.',
                         textAlign: TextAlign.center,
-                        style: t.bodySmall
-                            ?.copyWith(color: esquema.onSurfaceVariant),
+                        style: t.bodySmall?.copyWith(
+                          color: esquema.onSurfaceVariant,
+                        ),
                       ),
                       const SizedBox(height: 12),
                       OutlinedButton.icon(

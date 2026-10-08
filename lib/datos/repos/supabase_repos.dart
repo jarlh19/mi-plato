@@ -358,12 +358,12 @@ class SbSugerenciasRepo implements SugerenciasRepo {
   }
 
   Sugerencia _aSugerencia(Map<String, dynamic> j) => Sugerencia(
-        alimento: Alimento.desdeJson(
-          Map<String, dynamic>.from(j['alimento'] as Map),
-        ),
-        porque: (j['porque'] ?? '') as String,
-        comida: tipoComidaDesde(j['comida'] as String?),
-      );
+    alimento: Alimento.desdeJson(
+      Map<String, dynamic>.from(j['alimento'] as Map),
+    ),
+    porque: (j['porque'] ?? '') as String,
+    comida: tipoComidaDesde(j['comida'] as String?),
+  );
 }
 
 /// Fotos de las comidas.

@@ -31,9 +31,12 @@ class _FormularioPerfilEstado extends State<FormularioPerfil> {
   final _form = GlobalKey<FormState>();
   late Perfil _perfil = widget.inicial;
   late final _edad = TextEditingController(text: '${widget.inicial.edad}');
-  late final _altura =
-      TextEditingController(text: _sinCola(widget.inicial.alturaCm));
-  late final _peso = TextEditingController(text: _sinCola(widget.inicial.pesoKg));
+  late final _altura = TextEditingController(
+    text: _sinCola(widget.inicial.alturaCm),
+  );
+  late final _peso = TextEditingController(
+    text: _sinCola(widget.inicial.pesoKg),
+  );
   bool _ocupado = false;
 
   static String _sinCola(double v) =>
@@ -53,7 +56,8 @@ class _FormularioPerfilEstado extends State<FormularioPerfil> {
     setState(() {
       _perfil = _perfil.copiar(
         edad: int.tryParse(_edad.text) ?? _perfil.edad,
-        alturaCm: double.tryParse(_altura.text.replaceAll(',', '.')) ??
+        alturaCm:
+            double.tryParse(_altura.text.replaceAll(',', '.')) ??
             _perfil.alturaCm,
         pesoKg:
             double.tryParse(_peso.text.replaceAll(',', '.')) ?? _perfil.pesoKg,
@@ -71,7 +75,11 @@ class _FormularioPerfilEstado extends State<FormularioPerfil> {
     }
   }
 
-  String? _validarNumero(String? v, {required double min, required double max}) {
+  String? _validarNumero(
+    String? v, {
+    required double min,
+    required double max,
+  }) {
     final n = double.tryParse((v ?? '').replaceAll(',', '.'));
     if (n == null) return 'Escribe un número';
     if (n < min || n > max) return 'Entre ${_sinCola(min)} y ${_sinCola(max)}';
@@ -122,8 +130,9 @@ class _FormularioPerfilEstado extends State<FormularioPerfil> {
               Expanded(
                 child: TextFormField(
                   controller: _altura,
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                   decoration: const InputDecoration(
                     labelText: 'Altura',
                     suffixText: 'cm',
@@ -136,8 +145,9 @@ class _FormularioPerfilEstado extends State<FormularioPerfil> {
               Expanded(
                 child: TextFormField(
                   controller: _peso,
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                   decoration: const InputDecoration(
                     labelText: 'Peso',
                     suffixText: 'kg',
@@ -214,7 +224,8 @@ class _FormularioPerfilEstado extends State<FormularioPerfil> {
                 ? const SizedBox(
                     height: 20,
                     width: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2))
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
                 : Text(widget.textoBoton),
           ),
         ],
@@ -235,14 +246,11 @@ class VistaPreviaMeta extends StatelessWidget {
     final esquema = Theme.of(context).colorScheme;
     final meta = metaDiaria(perfil);
     final lectura = lecturaImc(perfil);
-    final color = Tema.severidad(
-      context,
-      switch (lectura.nivel) {
-        Severidad.bueno => Tema.bueno,
-        Severidad.aviso => Tema.aviso,
-        Severidad.malo => Tema.malo,
-      },
-    );
+    final color = Tema.severidad(context, switch (lectura.nivel) {
+      Severidad.bueno => Tema.bueno,
+      Severidad.aviso => Tema.aviso,
+      Severidad.malo => Tema.malo,
+    });
 
     return Card(
       child: Padding(
@@ -261,12 +269,18 @@ class VistaPreviaMeta extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('IMC ${lectura.titulo}',
-                          style: t.bodyMedium
-                              ?.copyWith(fontWeight: FontWeight.w600)),
-                      Text(lectura.detalle,
-                          style: t.bodySmall
-                              ?.copyWith(color: esquema.onSurfaceVariant)),
+                      Text(
+                        'IMC ${lectura.titulo}',
+                        style: t.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        lectura.detalle,
+                        style: t.bodySmall?.copyWith(
+                          color: esquema.onSurfaceVariant,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -284,10 +298,10 @@ class VistaPreviaMeta extends StatelessWidget {
                 child: Text(
                   meta.deficit > 0
                       ? 'Un déficit de ${Fmt.kcal(meta.deficit)} al día: '
-                          'alrededor de ${meta.ritmoSemanalKg.toStringAsFixed(2)} '
-                          'kg por semana si se cumple.'
+                            'alrededor de ${meta.ritmoSemanalKg.toStringAsFixed(2)} '
+                            'kg por semana si se cumple.'
                       : 'Un superávit de ${Fmt.kcal(-meta.deficit)} al día '
-                          'para ganar masa poco a poco.',
+                            'para ganar masa poco a poco.',
                   style: t.bodySmall?.copyWith(color: esquema.onSurfaceVariant),
                 ),
               ),
@@ -312,12 +326,17 @@ class _Linea extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Text(etiqueta,
-                style: t.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant)),
+            child: Text(
+              etiqueta,
+              style: t.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
           ),
-          Text(valor,
-              style: t.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
+          Text(
+            valor,
+            style: t.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+          ),
         ],
       ),
     );

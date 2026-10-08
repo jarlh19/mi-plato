@@ -40,7 +40,7 @@ class TarjetaSugerencias extends ConsumerWidget {
               Text(
                 hueco.kcal < 100
                     ? 'Ya cubriste tu meta de hoy. Sugerirte más comida sería '
-                        'empujarte a pasarte.'
+                          'empujarte a pasarte.'
                     : 'No queda ninguna comida por registrar hoy.',
                 style: t.bodyMedium,
               )
@@ -105,8 +105,8 @@ class _Boton extends StatelessWidget {
           'Propone el modelo; lo que no encaja con tus topes no se muestra.',
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
       ],
     );
@@ -150,9 +150,9 @@ class _Error extends StatelessWidget {
       children: [
         Text(
           mensaje,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: esquema.error,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: esquema.error),
         ),
         const SizedBox(height: 8),
         OutlinedButton(
@@ -202,7 +202,7 @@ class _Resultado extends StatelessWidget {
             descartadas.length == 1
                 ? 'Se descartó 1 propuesta: ${descartadas.first.rechazo!.etiqueta.toLowerCase()}.'
                 : 'Se descartaron ${descartadas.length} propuestas que no '
-                    'encajaban con tus topes.',
+                      'encajaban con tus topes.',
             style: t.bodySmall?.copyWith(color: esquema.onSurfaceVariant),
           ),
         ],

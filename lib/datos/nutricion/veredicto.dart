@@ -74,129 +74,162 @@ Veredicto evaluarComida({
   final restante = meta.kcal - yaConsumido.kcal - t.kcal;
 
   if (restante < 0) {
-    puntos.add(Punto(
-      Severidad.malo,
-      'Con esta comida pasas tu meta del día en ${Fmt.kcal(-restante)}',
-      detalle: 'Tu meta diaria es ${Fmt.kcal(meta.kcal)}.',
-    ));
+    puntos.add(
+      Punto(
+        Severidad.malo,
+        'Con esta comida pasas tu meta del día en ${Fmt.kcal(-restante)}',
+        detalle: 'Tu meta diaria es ${Fmt.kcal(meta.kcal)}.',
+      ),
+    );
   } else if (razon > 1.4) {
-    puntos.add(Punto(
-      Severidad.malo,
-      'Pesado para un ${comida.tipo.etiqueta.toLowerCase()}: '
-          '${Fmt.kcal(t.kcal)} frente a las ${Fmt.kcal(esperado)} previstas',
-      detalle: 'Te quedan ${Fmt.kcal(restante)} para el resto del día.',
-    ));
+    puntos.add(
+      Punto(
+        Severidad.malo,
+        'Pesado para un ${comida.tipo.etiqueta.toLowerCase()}: '
+        '${Fmt.kcal(t.kcal)} frente a las ${Fmt.kcal(esperado)} previstas',
+        detalle: 'Te quedan ${Fmt.kcal(restante)} para el resto del día.',
+      ),
+    );
   } else if (razon > 1.15) {
-    puntos.add(Punto(
-      Severidad.aviso,
-      'Algo por encima de lo previsto: ${Fmt.kcal(t.kcal)} de '
-          '${Fmt.kcal(esperado)}',
-      detalle: 'Recuperable si aligeras la siguiente comida.',
-    ));
+    puntos.add(
+      Punto(
+        Severidad.aviso,
+        'Algo por encima de lo previsto: ${Fmt.kcal(t.kcal)} de '
+        '${Fmt.kcal(esperado)}',
+        detalle: 'Recuperable si aligeras la siguiente comida.',
+      ),
+    );
   } else if (razon < 0.5 && comida.tipo != TipoComida.snack) {
-    puntos.add(Punto(
-      categoria == CategoriaImc.bajoPeso ? Severidad.malo : Severidad.aviso,
-      'Muy ligero para un ${comida.tipo.etiqueta.toLowerCase()}: '
-          'solo ${Fmt.kcal(t.kcal)}',
-      detalle: 'Comer de menos ahora suele acabar en picoteo después.',
-    ));
+    puntos.add(
+      Punto(
+        categoria == CategoriaImc.bajoPeso ? Severidad.malo : Severidad.aviso,
+        'Muy ligero para un ${comida.tipo.etiqueta.toLowerCase()}: '
+        'solo ${Fmt.kcal(t.kcal)}',
+        detalle: 'Comer de menos ahora suele acabar en picoteo después.',
+      ),
+    );
   } else {
-    puntos.add(Punto(
-      Severidad.bueno,
-      'Encaja en tu ${comida.tipo.etiqueta.toLowerCase()}: '
-          '${Fmt.kcal(t.kcal)} de ${Fmt.kcal(esperado)}',
-    ));
+    puntos.add(
+      Punto(
+        Severidad.bueno,
+        'Encaja en tu ${comida.tipo.etiqueta.toLowerCase()}: '
+        '${Fmt.kcal(t.kcal)} de ${Fmt.kcal(esperado)}',
+      ),
+    );
   }
 
   // --- Proteína -----------------------------------------------------------
   final fracProteina = meta.proteina > 0 ? t.proteina / meta.proteina : 0.0;
   if (fracProteina >= 0.25) {
-    puntos.add(Punto(
-      Severidad.bueno,
-      'Buena carga de proteína: ${Fmt.gramos(t.proteina)}, '
-          '${Fmt.porcentaje(fracProteina)} de tu día',
-      detalle: perfil.objetivo == Objetivo.bajarPeso
-          ? 'Sacia y protege tu masa muscular mientras bajas de peso.'
-          : 'Es lo que usa el cuerpo para construir músculo.',
-    ));
+    puntos.add(
+      Punto(
+        Severidad.bueno,
+        'Buena carga de proteína: ${Fmt.gramos(t.proteina)}, '
+        '${Fmt.porcentaje(fracProteina)} de tu día',
+        detalle: perfil.objetivo == Objetivo.bajarPeso
+            ? 'Sacia y protege tu masa muscular mientras bajas de peso.'
+            : 'Es lo que usa el cuerpo para construir músculo.',
+      ),
+    );
   } else if (fracProteina < 0.10 && comida.tipo != TipoComida.snack) {
-    puntos.add(Punto(
-      Severidad.aviso,
-      'Poca proteína: ${Fmt.gramos(t.proteina)}',
-      detalle: 'Tu meta del día son ${Fmt.gramos(meta.proteina)}; '
-          'con este ritmo no llegas.',
-    ));
+    puntos.add(
+      Punto(
+        Severidad.aviso,
+        'Poca proteína: ${Fmt.gramos(t.proteina)}',
+        detalle:
+            'Tu meta del día son ${Fmt.gramos(meta.proteina)}; '
+            'con este ritmo no llegas.',
+      ),
+    );
   }
 
   // --- Fibra --------------------------------------------------------------
   final fracFibra = meta.fibra > 0 ? t.fibra / meta.fibra : 0.0;
   if (fracFibra >= 0.25) {
-    puntos.add(Punto(
-      Severidad.bueno,
-      'Aporta fibra: ${Fmt.gramos(t.fibra)}',
-      detalle: 'Alarga la saciedad y ayuda al control de la glucosa.',
-    ));
+    puntos.add(
+      Punto(
+        Severidad.bueno,
+        'Aporta fibra: ${Fmt.gramos(t.fibra)}',
+        detalle: 'Alarga la saciedad y ayuda al control de la glucosa.',
+      ),
+    );
   } else if (t.fibra < 2 && comida.tipo != TipoComida.snack) {
-    puntos.add(Punto(
-      Severidad.aviso,
-      'Casi sin fibra: ${Fmt.gramos(t.fibra)}',
-      detalle: 'Una verdura o una fruta en el plato lo arregla.',
-    ));
+    puntos.add(
+      Punto(
+        Severidad.aviso,
+        'Casi sin fibra: ${Fmt.gramos(t.fibra)}',
+        detalle: 'Una verdura o una fruta en el plato lo arregla.',
+      ),
+    );
   }
 
   // --- Sodio, azúcar y grasa saturada -------------------------------------
   // Son techos diarios: lo que se mira es cuánto del techo se gasta de una vez.
   final fracSodio = meta.sodioMax > 0 ? t.sodio / meta.sodioMax : 0.0;
   if (fracSodio > 0.5) {
-    puntos.add(Punto(
-      Severidad.malo,
-      'Sodio alto: ${Fmt.miligramos(t.sodio)}, '
-          '${Fmt.porcentaje(fracSodio)} de tu tope del día',
-      detalle: perfil.condiciones.contains(Condicion.hipertension)
-          ? 'Con hipertensión tu tope es más bajo (1500 mg).'
-          : 'La OMS recomienda no pasar de 2000 mg al día.',
-    ));
+    puntos.add(
+      Punto(
+        Severidad.malo,
+        'Sodio alto: ${Fmt.miligramos(t.sodio)}, '
+        '${Fmt.porcentaje(fracSodio)} de tu tope del día',
+        detalle: perfil.condiciones.contains(Condicion.hipertension)
+            ? 'Con hipertensión tu tope es más bajo (1500 mg).'
+            : 'La OMS recomienda no pasar de 2000 mg al día.',
+      ),
+    );
   } else if (fracSodio > 0.33) {
-    puntos.add(Punto(
-      Severidad.aviso,
-      'Sodio a vigilar: ${Fmt.miligramos(t.sodio)}',
-      detalle: 'Ya vas por ${Fmt.porcentaje(fracSodio)} del tope diario.',
-    ));
+    puntos.add(
+      Punto(
+        Severidad.aviso,
+        'Sodio a vigilar: ${Fmt.miligramos(t.sodio)}',
+        detalle: 'Ya vas por ${Fmt.porcentaje(fracSodio)} del tope diario.',
+      ),
+    );
   }
 
   final fracAzucar = meta.azucarMax > 0 ? t.azucares / meta.azucarMax : 0.0;
   if (fracAzucar > 0.5) {
-    puntos.add(Punto(
-      Severidad.malo,
-      'Mucho azúcar: ${Fmt.gramos(t.azucares)}, '
-          '${Fmt.porcentaje(fracAzucar)} de tu tope',
-      detalle: perfil.condiciones.contains(Condicion.diabetes)
-          ? 'Con diabetes tu tope está en el 5% de las calorías.'
-          : 'Sube rápido y deja con hambre al poco rato.',
-    ));
+    puntos.add(
+      Punto(
+        Severidad.malo,
+        'Mucho azúcar: ${Fmt.gramos(t.azucares)}, '
+        '${Fmt.porcentaje(fracAzucar)} de tu tope',
+        detalle: perfil.condiciones.contains(Condicion.diabetes)
+            ? 'Con diabetes tu tope está en el 5% de las calorías.'
+            : 'Sube rápido y deja con hambre al poco rato.',
+      ),
+    );
   } else if (fracAzucar > 0.33) {
-    puntos.add(Punto(
-      Severidad.aviso,
-      'Azúcar a tener en cuenta: ${Fmt.gramos(t.azucares)}',
-      detalle: 'Parte puede venir de la fruta entera, que preocupa menos.',
-    ));
+    puntos.add(
+      Punto(
+        Severidad.aviso,
+        'Azúcar a tener en cuenta: ${Fmt.gramos(t.azucares)}',
+        detalle: 'Parte puede venir de la fruta entera, que preocupa menos.',
+      ),
+    );
   }
 
-  final fracSaturada = meta.saturadaMax > 0 ? t.saturada / meta.saturadaMax : 0.0;
+  final fracSaturada = meta.saturadaMax > 0
+      ? t.saturada / meta.saturadaMax
+      : 0.0;
   if (fracSaturada > 0.5) {
-    puntos.add(Punto(
-      Severidad.malo,
-      'Grasa saturada alta: ${Fmt.gramos(t.saturada)}, '
-          '${Fmt.porcentaje(fracSaturada)} de tu tope',
-      detalle: perfil.condiciones.contains(Condicion.colesterolAlto)
-          ? 'Con colesterol alto conviene quedarse por debajo del 7%.'
-          : 'Frituras, embutidos y lácteos enteros son la fuente habitual.',
-    ));
+    puntos.add(
+      Punto(
+        Severidad.malo,
+        'Grasa saturada alta: ${Fmt.gramos(t.saturada)}, '
+        '${Fmt.porcentaje(fracSaturada)} de tu tope',
+        detalle: perfil.condiciones.contains(Condicion.colesterolAlto)
+            ? 'Con colesterol alto conviene quedarse por debajo del 7%.'
+            : 'Frituras, embutidos y lácteos enteros son la fuente habitual.',
+      ),
+    );
   } else if (fracSaturada > 0.35) {
-    puntos.add(Punto(
-      Severidad.aviso,
-      'Grasa saturada a vigilar: ${Fmt.gramos(t.saturada)}',
-    ));
+    puntos.add(
+      Punto(
+        Severidad.aviso,
+        'Grasa saturada a vigilar: ${Fmt.gramos(t.saturada)}',
+      ),
+    );
   }
 
   // --- Densidad calórica --------------------------------------------------
@@ -205,29 +238,37 @@ Veredicto evaluarComida({
   if (comida.gramosTotales > 0) {
     final densidad = t.kcal / comida.gramosTotales * 100;
     if (densidad > 250) {
-      puntos.add(Punto(
-        categoria == CategoriaImc.bajoPeso ? Severidad.bueno : Severidad.aviso,
-        'Plato denso: ${densidad.round()} kcal por cada 100 g',
-        detalle: categoria == CategoriaImc.bajoPeso
-            ? 'Te conviene: suma calorías sin tener que comer mucho volumen.'
-            : 'Mucha energía en poco volumen; llena menos de lo que suma.',
-      ));
+      puntos.add(
+        Punto(
+          categoria == CategoriaImc.bajoPeso
+              ? Severidad.bueno
+              : Severidad.aviso,
+          'Plato denso: ${densidad.round()} kcal por cada 100 g',
+          detalle: categoria == CategoriaImc.bajoPeso
+              ? 'Te conviene: suma calorías sin tener que comer mucho volumen.'
+              : 'Mucha energía en poco volumen; llena menos de lo que suma.',
+        ),
+      );
     } else if (densidad < 120 && perfil.objetivo == Objetivo.bajarPeso) {
-      puntos.add(Punto(
-        Severidad.bueno,
-        'Poco denso: ${densidad.round()} kcal por 100 g',
-        detalle: 'Llena el plato sin gastarte el presupuesto del día.',
-      ));
+      puntos.add(
+        Punto(
+          Severidad.bueno,
+          'Poco denso: ${densidad.round()} kcal por 100 g',
+          detalle: 'Llena el plato sin gastarte el presupuesto del día.',
+        ),
+      );
     }
   }
 
   // --- Fiabilidad de la lectura -------------------------------------------
   if (comida.confianza < 0.6) {
-    puntos.add(const Punto(
-      Severidad.aviso,
-      'El reconocimiento de la foto no fue claro',
-      detalle: 'Revisa los alimentos y ajusta los gramos antes de guardar.',
-    ));
+    puntos.add(
+      const Punto(
+        Severidad.aviso,
+        'El reconocimiento de la foto no fue claro',
+        detalle: 'Revisa los alimentos y ajusta los gramos antes de guardar.',
+      ),
+    );
   }
 
   final resumen = restante >= 0
@@ -254,68 +295,86 @@ Veredicto evaluarDia({
   final fraccion = meta.kcal > 0 ? t.kcal / meta.kcal : 0.0;
 
   if (fraccion > 1.10) {
-    puntos.add(Punto(
-      Severidad.malo,
-      'Pasaste tu meta en ${Fmt.kcal(-restante)}',
-      detalle: perfil.objetivo == Objetivo.bajarPeso
-          ? 'Un día suelto no rompe nada; lo que cuenta es la media semanal.'
-          : 'Revisa si el objetivo de calorías se te quedó corto.',
-    ));
+    puntos.add(
+      Punto(
+        Severidad.malo,
+        'Pasaste tu meta en ${Fmt.kcal(-restante)}',
+        detalle: perfil.objetivo == Objetivo.bajarPeso
+            ? 'Un día suelto no rompe nada; lo que cuenta es la media semanal.'
+            : 'Revisa si el objetivo de calorías se te quedó corto.',
+      ),
+    );
   } else if (fraccion < 0.75) {
-    puntos.add(Punto(
-      Severidad.aviso,
-      'Te quedaste corto: ${Fmt.kcal(t.kcal)} de ${Fmt.kcal(meta.kcal)}',
-      detalle: 'Comer muy por debajo baja el metabolismo y cuesta sostenerlo.',
-    ));
+    puntos.add(
+      Punto(
+        Severidad.aviso,
+        'Te quedaste corto: ${Fmt.kcal(t.kcal)} de ${Fmt.kcal(meta.kcal)}',
+        detalle:
+            'Comer muy por debajo baja el metabolismo y cuesta sostenerlo.',
+      ),
+    );
   } else {
-    puntos.add(Punto(
-      Severidad.bueno,
-      'Día en meta: ${Fmt.kcal(t.kcal)} de ${Fmt.kcal(meta.kcal)}',
-    ));
+    puntos.add(
+      Punto(
+        Severidad.bueno,
+        'Día en meta: ${Fmt.kcal(t.kcal)} de ${Fmt.kcal(meta.kcal)}',
+      ),
+    );
   }
 
   final fracProteina = meta.proteina > 0 ? t.proteina / meta.proteina : 0.0;
-  puntos.add(fracProteina >= 0.9
-      ? Punto(Severidad.bueno,
-          'Proteína cubierta: ${Fmt.gramos(t.proteina)}')
-      : Punto(
-          fracProteina < 0.6 ? Severidad.malo : Severidad.aviso,
-          'Proteína por debajo: ${Fmt.gramos(t.proteina)} de '
-              '${Fmt.gramos(meta.proteina)}',
-          detalle: perfil.objetivo == Objetivo.bajarPeso
-              ? 'En déficit, la proteína baja se paga en masa muscular.'
-              : 'Sin proteína suficiente no hay construcción de músculo.',
-        ));
+  puntos.add(
+    fracProteina >= 0.9
+        ? Punto(Severidad.bueno, 'Proteína cubierta: ${Fmt.gramos(t.proteina)}')
+        : Punto(
+            fracProteina < 0.6 ? Severidad.malo : Severidad.aviso,
+            'Proteína por debajo: ${Fmt.gramos(t.proteina)} de '
+            '${Fmt.gramos(meta.proteina)}',
+            detalle: perfil.objetivo == Objetivo.bajarPeso
+                ? 'En déficit, la proteína baja se paga en masa muscular.'
+                : 'Sin proteína suficiente no hay construcción de músculo.',
+          ),
+  );
 
   if (t.fibra >= meta.fibra) {
-    puntos.add(Punto(Severidad.bueno, 'Fibra cubierta: ${Fmt.gramos(t.fibra)}'));
+    puntos.add(
+      Punto(Severidad.bueno, 'Fibra cubierta: ${Fmt.gramos(t.fibra)}'),
+    );
   } else if (t.fibra < meta.fibra * 0.5) {
-    puntos.add(Punto(
-      Severidad.aviso,
-      'Poca fibra: ${Fmt.gramos(t.fibra)} de ${Fmt.gramos(meta.fibra)}',
-    ));
+    puntos.add(
+      Punto(
+        Severidad.aviso,
+        'Poca fibra: ${Fmt.gramos(t.fibra)} de ${Fmt.gramos(meta.fibra)}',
+      ),
+    );
   }
 
   if (t.sodio > meta.sodioMax) {
-    puntos.add(Punto(
-      Severidad.malo,
-      'Sodio por encima del tope: ${Fmt.miligramos(t.sodio)}',
-      detalle: 'Tope del día: ${Fmt.miligramos(meta.sodioMax)}.',
-    ));
+    puntos.add(
+      Punto(
+        Severidad.malo,
+        'Sodio por encima del tope: ${Fmt.miligramos(t.sodio)}',
+        detalle: 'Tope del día: ${Fmt.miligramos(meta.sodioMax)}.',
+      ),
+    );
   }
   if (t.azucares > meta.azucarMax) {
-    puntos.add(Punto(
-      Severidad.malo,
-      'Azúcar por encima del tope: ${Fmt.gramos(t.azucares)}',
-      detalle: 'Tope del día: ${Fmt.gramos(meta.azucarMax)}.',
-    ));
+    puntos.add(
+      Punto(
+        Severidad.malo,
+        'Azúcar por encima del tope: ${Fmt.gramos(t.azucares)}',
+        detalle: 'Tope del día: ${Fmt.gramos(meta.azucarMax)}.',
+      ),
+    );
   }
   if (t.saturada > meta.saturadaMax) {
-    puntos.add(Punto(
-      Severidad.malo,
-      'Grasa saturada por encima del tope: ${Fmt.gramos(t.saturada)}',
-      detalle: 'Tope del día: ${Fmt.gramos(meta.saturadaMax)}.',
-    ));
+    puntos.add(
+      Punto(
+        Severidad.malo,
+        'Grasa saturada por encima del tope: ${Fmt.gramos(t.saturada)}',
+        detalle: 'Tope del día: ${Fmt.gramos(meta.saturadaMax)}.',
+      ),
+    );
   }
 
   final resumen = restante >= 0
@@ -339,14 +398,18 @@ Veredicto evaluarDia({
 
   final detalle = cat.esSaludable
       ? 'Para tu altura, el rango saludable va de '
-          '${Fmt.peso(rango.min)} a ${Fmt.peso(rango.max)}.'
+            '${Fmt.peso(rango.min)} a ${Fmt.peso(rango.max)}.'
       : cat == CategoriaImc.bajoPeso
-          ? 'Te faltan ${Fmt.peso(rango.min - p.pesoKg)} para entrar en el '
-              'rango saludable de tu altura.'
-          : 'Estás ${Fmt.peso(p.pesoKg - rango.max)} por encima del rango '
-              'saludable de tu altura.';
+      ? 'Te faltan ${Fmt.peso(rango.min - p.pesoKg)} para entrar en el '
+            'rango saludable de tu altura.'
+      : 'Estás ${Fmt.peso(p.pesoKg - rango.max)} por encima del rango '
+            'saludable de tu altura.';
 
-  return (titulo: '${Fmt.imc(valor)} · ${cat.etiqueta}', detalle: detalle, nivel: nivel);
+  return (
+    titulo: '${Fmt.imc(valor)} · ${cat.etiqueta}',
+    detalle: detalle,
+    nivel: nivel,
+  );
 }
 
 /// Ritmo real de cambio de peso a partir del historial, en kg por semana.

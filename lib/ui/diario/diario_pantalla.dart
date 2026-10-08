@@ -53,17 +53,16 @@ class _BarraDia extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.chevron_left),
             tooltip: 'Día anterior',
-            onPressed: () => ref.read(diaProvider.notifier).state =
-                dia.subtract(const Duration(days: 1)),
+            onPressed: () => ref.read(diaProvider.notifier).state = dia
+                .subtract(const Duration(days: 1)),
           ),
           Expanded(
             child: Text(
               Fmt.diaRelativo(dia),
               textAlign: TextAlign.center,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(fontWeight: FontWeight.w700),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
             ),
           ),
           IconButton(
@@ -72,8 +71,9 @@ class _BarraDia extends ConsumerWidget {
             // No se navega al futuro: no hay nada que registrar allí.
             onPressed: esHoy
                 ? null
-                : () => ref.read(diaProvider.notifier).state =
-                    dia.add(const Duration(days: 1)),
+                : () => ref.read(diaProvider.notifier).state = dia.add(
+                    const Duration(days: 1),
+                  ),
           ),
         ],
       ),
@@ -185,8 +185,12 @@ class _Contenido extends ConsumerWidget {
           )
         else
           for (final tipo in TipoComida.values)
-            ..._bloqueTipo(context, ref, tipo,
-                comidas.where((c) => c.tipo == tipo).toList()),
+            ..._bloqueTipo(
+              context,
+              ref,
+              tipo,
+              comidas.where((c) => c.tipo == tipo).toList(),
+            ),
       ],
     );
   }
@@ -206,9 +210,12 @@ class _Contenido extends ConsumerWidget {
         child: Row(
           children: [
             Expanded(child: Text(tipo.etiqueta, style: t.titleSmall)),
-            Text(Fmt.kcal(kcal),
-                style: t.labelLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant)),
+            Text(
+              Fmt.kcal(kcal),
+              style: t.labelLarge?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
           ],
         ),
       ),
@@ -259,27 +266,32 @@ class _FilaComida extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(titulo,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: t.bodyLarge
-                              ?.copyWith(fontWeight: FontWeight.w600)),
+                      Text(
+                        titulo,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: t.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                       const SizedBox(height: 2),
                       Text(
                         '${Fmt.hora(comida.fecha)} · '
                         'P ${comida.total.proteina.round()} g · '
                         'C ${comida.total.carbohidratos.round()} g · '
                         'G ${comida.total.grasa.round()} g',
-                        style: t.bodySmall
-                            ?.copyWith(color: esquema.onSurfaceVariant),
+                        style: t.bodySmall?.copyWith(
+                          color: esquema.onSurfaceVariant,
+                        ),
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(width: 8),
-                Text(Fmt.kcal(comida.total.kcal),
-                    style: t.titleSmall
-                        ?.copyWith(fontWeight: FontWeight.w700)),
+                Text(
+                  Fmt.kcal(comida.total.kcal),
+                  style: t.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+                ),
               ],
             ),
           ),

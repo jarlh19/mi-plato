@@ -352,7 +352,6 @@ class VisionDemo implements VisionRepo {
   }
 }
 
-
 /// Sugerencias sin backend.
 ///
 /// No hay modelo detrás: elige de la tabla local lo que mejor tapa el hueco.
@@ -387,7 +386,8 @@ class SugerenciasDemo implements SugerenciasRepo {
         : hueco.comidasPendientes.first;
 
     return PropuestaSugerencias(
-      nota: 'Modo demo: estas propuestas salen de la tabla local, no de un '
+      nota:
+          'Modo demo: estas propuestas salen de la tabla local, no de un '
           'modelo. Configura Supabase para las sugerencias reales.',
       sugerencias: [
         for (final base in elegidos.take(3))
@@ -396,10 +396,10 @@ class SugerenciasDemo implements SugerenciasRepo {
             comida: comida,
             porque: porProteina
                 ? 'Aporta proteína sin gastar muchas calorías, que es lo que '
-                    'más te falta hoy.'
+                      'más te falta hoy.'
                 : porFibra
-                    ? 'Suma fibra, que es lo que peor vas cubriendo hoy.'
-                    : 'Llena sin gastarte las calorías que te quedan.',
+                ? 'Suma fibra, que es lo que peor vas cubriendo hoy.'
+                : 'Llena sin gastarte las calorías que te quedan.',
           ),
       ],
     );

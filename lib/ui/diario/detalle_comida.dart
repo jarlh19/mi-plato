@@ -87,8 +87,10 @@ class _DetalleComida extends ConsumerWidget {
               '${Fmt.cantidad(a.cantidad, a.unidad)} · ${a.fuente.etiqueta}',
               style: t.bodySmall,
             ),
-            trailing: Text(Fmt.kcal(a.total.kcal),
-                style: t.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
+            trailing: Text(
+              Fmt.kcal(a.total.kcal),
+              style: t.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+            ),
           ),
         const Divider(height: 24),
         _TablaNutrientes(total: comida.total),
@@ -99,16 +101,20 @@ class _DetalleComida extends ConsumerWidget {
               context: context,
               builder: (d) => AlertDialog(
                 title: const Text('¿Borrar esta comida?'),
-                content: Text(comida.fotoUrl.isEmpty
-                    ? 'Dejará de contar en el día.'
-                    : 'Dejará de contar en el día y se borrará también su foto.'),
+                content: Text(
+                  comida.fotoUrl.isEmpty
+                      ? 'Dejará de contar en el día.'
+                      : 'Dejará de contar en el día y se borrará también su foto.',
+                ),
                 actions: [
                   TextButton(
-                      onPressed: () => Navigator.pop(d, false),
-                      child: const Text('Cancelar')),
+                    onPressed: () => Navigator.pop(d, false),
+                    child: const Text('Cancelar'),
+                  ),
                   FilledButton(
-                      onPressed: () => Navigator.pop(d, true),
-                      child: const Text('Borrar')),
+                    onPressed: () => Navigator.pop(d, true),
+                    child: const Text('Borrar'),
+                  ),
                 ],
               ),
             );
@@ -154,7 +160,9 @@ class _Foto extends ConsumerWidget {
           data: (u) => u.isEmpty
               ? const ColoredBox(
                   color: Colors.black12,
-                  child: Center(child: Icon(Icons.image_not_supported_outlined)),
+                  child: Center(
+                    child: Icon(Icons.image_not_supported_outlined),
+                  ),
                 )
               : Image.network(u, fit: BoxFit.cover),
         ),
@@ -191,13 +199,17 @@ class _TablaNutrientes extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: Text(etiqueta,
-                      style: t.bodyMedium
-                          ?.copyWith(color: esquema.onSurfaceVariant)),
+                  child: Text(
+                    etiqueta,
+                    style: t.bodyMedium?.copyWith(
+                      color: esquema.onSurfaceVariant,
+                    ),
+                  ),
                 ),
-                Text(valor,
-                    style:
-                        t.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
+                Text(
+                  valor,
+                  style: t.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+                ),
               ],
             ),
           ),

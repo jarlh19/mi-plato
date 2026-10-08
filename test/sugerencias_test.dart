@@ -29,27 +29,29 @@ void main() {
 
   /// Un hueco cómodo: media tarde, con la cena por registrar.
   HuecoDelDia huecoAmplio() => huecoDelDia(
-        meta: meta,
-        comido: const Nutrientes(kcal: 600, proteina: 30, sodio: 400),
-        tiposRegistrados: {TipoComida.desayuno, TipoComida.almuerzo},
-        ahora: DateTime(2026, 9, 29, 17),
-      );
+    meta: meta,
+    comido: const Nutrientes(kcal: 600, proteina: 30, sodio: 400),
+    tiposRegistrados: {TipoComida.desayuno, TipoComida.almuerzo},
+    ahora: DateTime(2026, 9, 29, 17),
+  );
 
-  Sugerencia deLaTabla(String nombre, {double? cantidad, String porque = 'x'}) =>
-      Sugerencia(
-        alimento: porNombre(nombre)!.aAlimento(cantidad: cantidad),
-        porque: porque,
-      );
+  Sugerencia deLaTabla(
+    String nombre, {
+    double? cantidad,
+    String porque = 'x',
+  }) => Sugerencia(
+    alimento: porNombre(nombre)!.aAlimento(cantidad: cantidad),
+    porque: porque,
+  );
 
   Sugerencia inventada({
     String nombre = 'Cosa',
     double gramos = 100,
     Nutrientes por100g = const Nutrientes(kcal: 100, proteina: 5),
-  }) =>
-      Sugerencia(
-        alimento: Alimento(nombre: nombre, gramos: gramos, por100g: por100g),
-        porque: 'x',
-      );
+  }) => Sugerencia(
+    alimento: Alimento(nombre: nombre, gramos: gramos, por100g: por100g),
+    porque: 'x',
+  );
 
   group('el hueco del día', () {
     test('resta lo comido a la meta', () {
@@ -119,19 +121,17 @@ void main() {
 
   group('el filtro de sugerencias', () {
     test('deja pasar algo que encaja', () {
-      final r = evaluarSugerencias(
-        [deLaTabla('Pechuga de pollo a la plancha')],
-        huecoAmplio(),
-      );
+      final r = evaluarSugerencias([
+        deLaTabla('Pechuga de pollo a la plancha'),
+      ], huecoAmplio());
       expect(r.single.aceptada, isTrue);
     });
 
     test('rechaza lo que se pasa de las calorías que quedan', () {
       final h = huecoAmplio();
-      final r = evaluarSugerencias(
-        [inventada(gramos: 1000, por100g: const Nutrientes(kcal: 500))],
-        h,
-      );
+      final r = evaluarSugerencias([
+        inventada(gramos: 1000, por100g: const Nutrientes(kcal: 500)),
+      ], h);
       expect(r.single.rechazo, MotivoRechazo.pasaKcal);
     });
 
@@ -140,60 +140,49 @@ void main() {
       // que su tope baja a 1500 mg. Una sopa de sobre entra de sobra en las
       // calorías del día y aun así no debe aparecer.
       final h = huecoAmplio();
-      final r = evaluarSugerencias(
-        [
-          inventada(
-            nombre: 'Sopa instantánea',
-            gramos: 300,
-            por100g: const Nutrientes(kcal: 40, sodio: 700),
-          ),
-        ],
-        h,
-      );
+      final r = evaluarSugerencias([
+        inventada(
+          nombre: 'Sopa instantánea',
+          gramos: 300,
+          por100g: const Nutrientes(kcal: 40, sodio: 700),
+        ),
+      ], h);
       expect(r.single.rechazo, MotivoRechazo.pasaSodio);
     });
 
     test('rechaza lo que revienta el tope de azúcar', () {
-      final r = evaluarSugerencias(
-        [deLaTabla('Gaseosa', cantidad: 1000)],
-        huecoAmplio(),
-      );
+      final r = evaluarSugerencias([
+        deLaTabla('Gaseosa', cantidad: 1000),
+      ], huecoAmplio());
       expect(r.single.rechazo, MotivoRechazo.pasaAzucar);
     });
 
     test('rechaza lo que revienta la grasa saturada', () {
-      final r = evaluarSugerencias(
-        [
-          inventada(
-            nombre: 'Chorizo',
-            gramos: 200,
-            por100g: const Nutrientes(kcal: 100, grasa: 40, saturada: 30),
-          ),
-        ],
-        huecoAmplio(),
-      );
+      final r = evaluarSugerencias([
+        inventada(
+          nombre: 'Chorizo',
+          gramos: 200,
+          por100g: const Nutrientes(kcal: 100, grasa: 40, saturada: 30),
+        ),
+      ], huecoAmplio());
       expect(r.single.rechazo, MotivoRechazo.pasaSaturada);
     });
 
     test('no se cree un alimento imposible', () {
       // 4000 kcal por 100 g no existe: la grasa pura son 884. Un número así
       // solo puede venir de un error o de alguien empujando texto.
-      final r = evaluarSugerencias(
-        [inventada(por100g: const Nutrientes(kcal: 4000))],
-        huecoAmplio(),
-      );
+      final r = evaluarSugerencias([
+        inventada(por100g: const Nutrientes(kcal: 4000)),
+      ], huecoAmplio());
       expect(r.single.rechazo, MotivoRechazo.datosImposibles);
     });
 
     test('no se cree más azúcar que carbohidrato', () {
-      final r = evaluarSugerencias(
-        [
-          inventada(
-            por100g: const Nutrientes(kcal: 100, carbohidratos: 10, azucares: 40),
-          ),
-        ],
-        huecoAmplio(),
-      );
+      final r = evaluarSugerencias([
+        inventada(
+          por100g: const Nutrientes(kcal: 100, carbohidratos: 10, azucares: 40),
+        ),
+      ], huecoAmplio());
       expect(r.single.rechazo, MotivoRechazo.datosImposibles);
     });
 
@@ -204,10 +193,7 @@ void main() {
         tiposRegistrados: const {},
         ahora: DateTime(2026, 9, 29, 20),
       );
-      final r = evaluarSugerencias(
-        [deLaTabla('Brócoli cocido')],
-        lleno,
-      );
+      final r = evaluarSugerencias([deLaTabla('Brócoli cocido')], lleno);
       expect(r.single.rechazo, MotivoRechazo.sinHueco);
     });
 
@@ -216,15 +202,9 @@ void main() {
       // Justo por encima de lo que queda, pero dentro del margen. La ración
       // se reparte en 500 g para que el valor por 100 g siga siendo creíble:
       // si no, se caería antes por imposible y esto no probaría el margen.
-      final r = evaluarSugerencias(
-        [
-          inventada(
-            gramos: 500,
-            por100g: Nutrientes(kcal: h.kcal * 1.05 / 5),
-          ),
-        ],
-        h,
-      );
+      final r = evaluarSugerencias([
+        inventada(gramos: 500, por100g: Nutrientes(kcal: h.kcal * 1.05 / 5)),
+      ], h);
       expect(r.single.aceptada, isTrue);
     });
   });
@@ -234,13 +214,10 @@ void main() {
       final h = huecoAmplio();
       final s = Sugerencias(
         hueco: h,
-        evaluadas: evaluarSugerencias(
-          [
-            deLaTabla('Pechuga de pollo a la plancha'),
-            inventada(gramos: 900, por100g: const Nutrientes(kcal: 600)),
-          ],
-          h,
-        ),
+        evaluadas: evaluarSugerencias([
+          deLaTabla('Pechuga de pollo a la plancha'),
+          inventada(gramos: 900, por100g: const Nutrientes(kcal: 600)),
+        ], h),
       );
 
       expect(s.aceptadas, hasLength(1));
@@ -253,10 +230,9 @@ void main() {
       final h = huecoAmplio();
       final s = Sugerencias(
         hueco: h,
-        evaluadas: evaluarSugerencias(
-          [inventada(por100g: const Nutrientes(kcal: 4000))],
-          h,
-        ),
+        evaluadas: evaluarSugerencias([
+          inventada(por100g: const Nutrientes(kcal: 4000)),
+        ], h),
       );
       expect(s.vacio, isTrue);
       expect(s.aceptadas, isEmpty);

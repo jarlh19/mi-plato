@@ -24,8 +24,7 @@ class FotosEspia implements FotosRepo {
     required String perfilId,
     required Uint8List bytes,
     required String extension,
-  }) async =>
-      '$perfilId/foto.jpg';
+  }) async => '$perfilId/foto.jpg';
 
   @override
   Future<void> eliminar(String ruta) async {
@@ -64,15 +63,13 @@ class AuthEspia implements AuthRepo {
   Future<Perfil> iniciarSesion({
     required String email,
     required String clave,
-  }) async =>
-      throw UnimplementedError();
+  }) async => throw UnimplementedError();
   @override
   Future<Perfil> registrar({
     required String nombre,
     required String email,
     required String clave,
-  }) async =>
-      throw UnimplementedError();
+  }) async => throw UnimplementedError();
 }
 
 void main() {
@@ -90,13 +87,13 @@ void main() {
   );
 
   Comida comida(String id, {String foto = ''}) => Comida(
-        id: id,
-        perfilId: 'p1',
-        fecha: DateTime(2026, 8, 30, 13),
-        tipo: TipoComida.almuerzo,
-        alimentos: [porNombre('Arroz blanco cocido')!.aAlimento(cantidad: 150)],
-        fotoUrl: foto,
-      );
+    id: id,
+    perfilId: 'p1',
+    fecha: DateTime(2026, 8, 30, 13),
+    tipo: TipoComida.almuerzo,
+    alimentos: [porNombre('Arroz blanco cocido')!.aAlimento(cantidad: 150)],
+    fotoUrl: foto,
+  );
 
   group('exportar mis datos', () {
     test('produce JSON válido con perfil, comidas y pesos', () {
@@ -124,9 +121,15 @@ void main() {
     });
 
     test('incluye los cálculos derivados, no solo los datos crudos', () {
-      final datos = jsonDecode(
-        exportarJson(perfil: perfil, comidas: const [], pesos: const []),
-      ) as Map<String, dynamic>;
+      final datos =
+          jsonDecode(
+                exportarJson(
+                  perfil: perfil,
+                  comidas: const [],
+                  pesos: const [],
+                ),
+              )
+              as Map<String, dynamic>;
 
       final calculado = datos['calculado'] as Map<String, dynamic>;
       expect(calculado['categoria_imc'], 'sobrepeso');
@@ -147,21 +150,25 @@ void main() {
     });
 
     test('anota cada porción en su unidad, no solo en gramos', () {
-      final datos = jsonDecode(
-        exportarJson(
-          perfil: perfil,
-          comidas: [
-            Comida(
-              id: 'c1',
-              perfilId: 'p1',
-              fecha: DateTime(2026, 8, 30, 13),
-              tipo: TipoComida.almuerzo,
-              alimentos: [porNombre('Gaseosa')!.aAlimento(cantidad: 350)],
-            ),
-          ],
-          pesos: const [],
-        ),
-      ) as Map<String, dynamic>;
+      final datos =
+          jsonDecode(
+                exportarJson(
+                  perfil: perfil,
+                  comidas: [
+                    Comida(
+                      id: 'c1',
+                      perfilId: 'p1',
+                      fecha: DateTime(2026, 8, 30, 13),
+                      tipo: TipoComida.almuerzo,
+                      alimentos: [
+                        porNombre('Gaseosa')!.aAlimento(cantidad: 350),
+                      ],
+                    ),
+                  ],
+                  pesos: const [],
+                ),
+              )
+              as Map<String, dynamic>;
 
       final bebida =
           ((datos['comidas'] as List).first['alimentos'] as List).first;
@@ -180,9 +187,15 @@ void main() {
         tipo: TipoComida.desayuno,
         alimentos: const [],
       );
-      final datos = jsonDecode(
-        exportarJson(perfil: perfil, comidas: [tarde, temprano], pesos: const []),
-      ) as Map<String, dynamic>;
+      final datos =
+          jsonDecode(
+                exportarJson(
+                  perfil: perfil,
+                  comidas: [tarde, temprano],
+                  pesos: const [],
+                ),
+              )
+              as Map<String, dynamic>;
 
       final ids = (datos['comidas'] as List).map((c) => c['id']).toList();
       expect(ids, ['c1', 'c2']);
@@ -220,19 +233,22 @@ void main() {
       expect(almacen.comidas, isEmpty);
     });
 
-    test('si falla el borrado de la foto, la comida sigue en el diario', () async {
-      // Es el orden que queremos: así se puede reintentar entero. Al revés
-      // quedaría una foto huérfana sin nada que apuntara a ella.
-      final c = comida('c1', foto: 'p1/1234.jpg');
-      almacen.comidas.add(c);
-      fotos.fallarAlBorrar = true;
+    test(
+      'si falla el borrado de la foto, la comida sigue en el diario',
+      () async {
+        // Es el orden que queremos: así se puede reintentar entero. Al revés
+        // quedaría una foto huérfana sin nada que apuntara a ella.
+        final c = comida('c1', foto: 'p1/1234.jpg');
+        almacen.comidas.add(c);
+        fotos.fallarAlBorrar = true;
 
-      await expectLater(
-        borrarComidaYFoto(diario: diario, fotos: fotos, comida: c),
-        throwsA(isA<ErrorApp>()),
-      );
-      expect(almacen.comidas, hasLength(1));
-    });
+        await expectLater(
+          borrarComidaYFoto(diario: diario, fotos: fotos, comida: c),
+          throwsA(isA<ErrorApp>()),
+        );
+        expect(almacen.comidas, hasLength(1));
+      },
+    );
   });
 
   group('borrar la cuenta', () {

@@ -80,7 +80,8 @@ class _Analizando extends StatelessWidget {
           Text(
             'Suele tardar unos segundos.',
             style: t.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
         ],
       ),
@@ -106,8 +107,7 @@ class _Formulario extends ConsumerWidget {
     }
 
     final comidasHoy = ref.watch(comidasDelDiaProvider).valueOrNull ?? const [];
-    final previo =
-        comidasHoy.fold(Nutrientes.cero, (acc, c) => acc + c.total);
+    final previo = comidasHoy.fold(Nutrientes.cero, (acc, c) => acc + c.total);
     final veredicto = borrador.alimentos.isEmpty
         ? null
         : evaluarComida(
@@ -149,14 +149,18 @@ class _Formulario extends ConsumerWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.info_outline,
-                          size: 18, color: esquema.onTertiaryContainer),
+                      Icon(
+                        Icons.info_outline,
+                        size: 18,
+                        color: esquema.onTertiaryContainer,
+                      ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           borrador.aviso,
-                          style: t.bodySmall
-                              ?.copyWith(color: esquema.onTertiaryContainer),
+                          style: t.bodySmall?.copyWith(
+                            color: esquema.onTertiaryContainer,
+                          ),
                         ),
                       ),
                     ],
@@ -183,9 +187,10 @@ class _Formulario extends ConsumerWidget {
               Row(
                 children: [
                   Expanded(child: Text('Alimentos', style: t.titleSmall)),
-                  Text(Fmt.kcal(borrador.total.kcal),
-                      style: t.titleSmall
-                          ?.copyWith(fontWeight: FontWeight.w700)),
+                  Text(
+                    Fmt.kcal(borrador.total.kcal),
+                    style: t.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+                  ),
                 ],
               ),
               const SizedBox(height: 4),
@@ -194,8 +199,9 @@ class _Formulario extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   child: Text(
                     'Todavía no hay nada. Añade lo que comiste.',
-                    style: t.bodyMedium
-                        ?.copyWith(color: esquema.onSurfaceVariant),
+                    style: t.bodyMedium?.copyWith(
+                      color: esquema.onSurfaceVariant,
+                    ),
                   ),
                 ),
               for (var i = 0; i < borrador.alimentos.length; i++)
@@ -281,13 +287,15 @@ class _FilaAlimento extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: Text(alimento.nombre,
-                      style: t.bodyLarge
-                          ?.copyWith(fontWeight: FontWeight.w600)),
+                  child: Text(
+                    alimento.nombre,
+                    style: t.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+                  ),
                 ),
-                Text(Fmt.kcal(alimento.total.kcal),
-                    style: t.bodyMedium
-                        ?.copyWith(fontWeight: FontWeight.w600)),
+                Text(
+                  Fmt.kcal(alimento.total.kcal),
+                  style: t.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+                ),
                 IconButton(
                   icon: const Icon(Icons.close, size: 18),
                   tooltip: 'Quitar',
