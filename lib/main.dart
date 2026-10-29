@@ -7,6 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'core/config.dart';
 import 'core/router.dart';
 import 'core/tema.dart';
+import 'datos/sesion_segura.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +19,10 @@ Future<void> main() async {
     await Supabase.initialize(
       url: Config.supabaseUrl,
       publishableKey: Config.supabaseAnonKey,
+      authOptions: FlutterAuthClientOptions(
+        localStorage: SesionSegura(clave: claveSesion(Config.supabaseUrl)),
+        pkceAsyncStorage: const PkceSeguro(),
+      ),
     );
   }
 
