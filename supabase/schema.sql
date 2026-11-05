@@ -5,6 +5,11 @@
 -- cuánto pesa, qué condiciones declara. Cada tabla lleva RLS y nadie ve filas
 -- que no sean suyas. No hay rol de administrador con acceso al diario ajeno.
 
+-- En Supabase toda función nueva del esquema public nace ejecutable por anon
+-- y authenticated, o sea por cualquiera con la clave pública. Aquí no: las que
+-- la app llama se habilitan una por una al final de este archivo.
+alter default privileges in schema public revoke execute on functions from anon, authenticated;
+
 -- ---------------------------------------------------------------- perfiles --
 create table if not exists public.perfiles (
   id              uuid primary key references auth.users on delete cascade,
@@ -211,9 +216,6 @@ begin
 end;
 $$;
 
-revoke all on function public.consumir_cuota(text) from public;
-grant execute on function public.consumir_cuota(text) to authenticated;
-
 -- ------------------------------------------------------- borrar mi cuenta --
 -- Esto guarda datos de salud: qué come alguien, cuánto pesa, qué condiciones
 -- declara. La retención es "hasta que la persona lo borre", así que el borrado
@@ -236,5 +238,13 @@ begin
 end;
 $$;
 
-revoke all on function public.borrar_mi_cuenta() from public;
+-- ------------------------------------------------------------ funciones ----
+-- Nadie llama por la API a las funciones de este archivo, salvo las de abajo.
+-- `revoke ... from public` solo no alcanza: Supabase le da el permiso a anon
+-- y authenticated aparte. La del trigger no lo necesita: Postgres revisa ese
+-- permiso al crear el trigger, no cada vez que corre. Si agregas una función
+-- que la app llama con .rpc(), dale su grant aquí.
+revoke execute on all functions in schema public from public, anon, authenticated;
+grant execute on all functions in schema public to service_role;
+grant execute on function public.consumir_cuota(text) to authenticated;
 grant execute on function public.borrar_mi_cuenta() to authenticated;

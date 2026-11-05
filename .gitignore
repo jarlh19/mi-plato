@@ -7,3 +7,6 @@ build/
 .idea/
 .vscode/
 *.log
+
+# Prueba del esquema (supabase/probar-esquema.mjs)
+supabase/node_modules/

@@ -134,6 +134,15 @@ which costs nothing.
 flutter test
 ```
 
+The database schema has its own check, against an in-memory Postgres
+(PGlite), with no Supabase project or Docker needed: nobody reads or touches
+someone else's diary, the daily analysis quota holds, and the API can only call
+the two functions the app uses, and only with a session.
+
+```bash
+cd supabase && npm install && npm run probar
+```
+
 82 tests on the logic that produces the numbers and on everything that touches
 personal data: BMI and energy formulas, the limits that tighten with medical
 conditions, every verdict rule, the diary store, the export format and the

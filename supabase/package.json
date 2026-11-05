@@ -1,0 +1,11 @@
+{
+  "name": "mi-plato-esquema",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "probar": "node probar-esquema.mjs"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.8"
+  }
+}

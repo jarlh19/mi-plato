@@ -134,6 +134,15 @@ nada.
 flutter test
 ```
 
+El esquema de la base tiene su propia prueba, contra un Postgres en memoria
+(PGlite), sin proyecto de Supabase ni Docker: nadie lee ni toca el diario de
+otro, la cuota diaria de análisis se respeta y por la API solo se llaman las dos
+funciones que usa la app, y solo con sesión.
+
+```bash
+cd supabase && npm install && npm run probar
+```
+
 82 tests sobre la lógica que produce los números y sobre lo que toca datos
 personales: fórmulas del IMC y del gasto, los topes que endurecen las
 condiciones médicas, cada regla del veredicto, el almacén del diario, el
