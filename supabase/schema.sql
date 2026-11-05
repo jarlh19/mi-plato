@@ -160,8 +160,23 @@ drop policy if exists uso_propio_leer on public.analisis_uso;
 create policy uso_propio_leer on public.analisis_uso
   for select using (perfil_id = auth.uid());
 
+-- Cuándo se llenó el tope total del día. Una fila por día y tipo: es lo que
+-- revisa Jorge para saber si hay que subir el tope o si alguien abusa. El
+-- esquema privado no está expuesto por la API.
+create schema if not exists privado;
+revoke all on schema privado from public, anon, authenticated;
+
+create table if not exists privado.topes_alcanzados (
+  fecha        date not null,
+  tipo         text not null,
+  usos         int  not null,
+  alcanzado_en timestamptz not null default now(),
+  primary key (fecha, tipo)
+);
+
 -- Consume una unidad de cuota del tipo pedido y devuelve cuántas quedan hoy,
--- o -1 si ya no queda ninguna.
+-- -1 si a la persona ya no le queda ninguna, o -2 si se llenó el tope total
+-- del día, entre todas las cuentas.
 --
 -- El tipo es un argumento, pero **los límites no**: son constantes de esta
 -- función. Si el número fuera un parámetro, cualquiera con sesión podría llamar
@@ -175,6 +190,8 @@ set search_path = public
 as $$
 declare
   limite   int;
+  global   int;
+  hoy      int;
   actuales int;
 begin
   if auth.uid() is null then
@@ -191,6 +208,20 @@ begin
 
   if limite is null then
     raise exception 'Tipo de cuota desconocido: %', p_tipo;
+  end if;
+
+  -- Tope total del día, entre todas las cuentas: muchas cuentas nuevas, cada
+  -- una con su cuota, igual vaciarían la cuenta de la IA. Se mira antes que
+  -- el de la persona para no descontarle un uso que no va a tener.
+  global := case p_tipo when 'analisis' then 300 when 'sugerencia' then 300 end;
+  select coalesce(sum(usos), 0) into hoy
+  from public.analisis_uso
+  where fecha = current_date and tipo = p_tipo;
+  if hoy >= global then
+    insert into privado.topes_alcanzados (fecha, tipo, usos)
+    values (current_date, p_tipo, hoy)
+    on conflict (fecha, tipo) do nothing;
+    return -2;
   end if;
 
   insert into public.analisis_uso (perfil_id, fecha, tipo, usos)

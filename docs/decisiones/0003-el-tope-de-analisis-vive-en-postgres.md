@@ -52,3 +52,11 @@ argumento.
   persona; sin él ambas leerían el mismo valor y las dos pasarían.
 - Al agotarse la cuota la app no se queda muerta: se puede seguir registrando a
   mano desde la tabla local, que no cuesta nada.
+
+## Actualización del 5-nov-2026
+
+Se suma un tope total por día, compartido por todas las cuentas (300 análisis
+y 300 tandas de sugerencias), en la misma función y por la misma razón: un
+parámetro se podría inflar, una constante no. Con el tope lleno la función
+devuelve -2 sin descontarle nada a la persona, y la primera vez de cada día
+queda en `privado.topes_alcanzados`. Lo cubre `supabase/probar-esquema.mjs`.

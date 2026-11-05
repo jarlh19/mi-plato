@@ -128,6 +128,14 @@ sugerencias al día, contados por separado para que gastar en uno no deje sin el
 otro. Al agotarse, la app sigue funcionando con la tabla local, que no cuesta
 nada.
 
+Encima hay un tope total por día, compartido por todas las cuentas: 300
+análisis y 300 tandas de sugerencias (unos 3 dólares al día de análisis con la
+estimación de arriba), también constantes de `consumir_cuota()`. Sin él, muchas
+cuentas nuevas, cada una con su cuota, igual multiplicarían la cuenta. La
+primera vez de cada día que se llena queda anotada en
+`privado.topes_alcanzados`, que la API no expone, y la Edge Function lo
+registra como error.
+
 ## Tests
 
 ```bash

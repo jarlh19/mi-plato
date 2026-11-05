@@ -235,6 +235,12 @@ Deno.serve(async (peticion) => {
     log('error', 'cuota_fallo', { idPeticion, usuario: usuario.id, codigo: errorCuota.code });
     return json({ error: 'No se pudo comprobar tu cuota. Inténtalo en un momento.' }, 500);
   }
+  // -2: se llenó el tope total del día, entre todas las cuentas (ver
+  // privado.topes_alcanzados).
+  if (restantes === -2) {
+    log('error', 'tope_total_del_dia', { idPeticion, tipo: 'sugerencia' });
+    return json({ error: 'Las sugerencias llegaron a su límite de hoy para todos. Vuelve mañana.' }, 429);
+  }
   if (typeof restantes === 'number' && restantes < 0) {
     log('warn', 'cuota_agotada', { idPeticion, usuario: usuario.id });
     return json(

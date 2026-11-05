@@ -128,6 +128,13 @@ batches per day, counted separately so that using one does not block the
 other. When a quota runs out, the app keeps working with the local food table,
 which costs nothing.
 
+On top of that there is a total daily cap shared by every account: 300
+analyses and 300 suggestion batches (about US$3 a day of analyses at the
+estimate above), also constants in `consumir_cuota()`. Without it, many new
+accounts, each with its own quota, would still multiply the bill. The first
+time each day the cap is hit it is recorded in `privado.topes_alcanzados`,
+which the API does not expose, and the Edge Function logs it as an error.
+
 ## Tests
 
 ```bash

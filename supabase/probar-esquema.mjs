@@ -94,6 +94,21 @@ const tocarCuota = await intenta(`update analisis_uso set usos = 0 where perfil_
 ok(await cuenta(`select usos n from analisis_uso where perfil_id = $1 and tipo = 'analisis'`, [ANA]) === 30
   && (tocarCuota instanceof Error || tocarCuota.length === 0), 'nadie se reinicia la cuota a mano')
 
+// Tope total del día, entre todas las cuentas: muchas cuentas nuevas, cada
+// una con su cuota, igual vaciarían la cuenta de la IA.
+await editor()
+await db.query(`insert into analisis_uso (perfil_id, fecha, tipo, usos) values ($1, current_date, 'sugerencia', 300)`, [BETO])
+await como(ANA)
+ok((await db.query(`select consumir_cuota('sugerencia') q`)).rows[0].q === -2,
+  'con el tope total del día lleno, la cuota responde -2 aunque a la persona le queden')
+ok(await cuenta(`select usos n from analisis_uso where perfil_id = $1 and tipo = 'sugerencia'`, [ANA]) === 1,
+  'y no le descuenta nada a la persona')
+ok(await cuenta(`select count(*)::int n from privado.topes_alcanzados where fecha = current_date and tipo = 'sugerencia'`) === 1,
+  'el primer choque con el tope total del día queda anotado')
+await como(ANA)
+await db.query(`select consumir_cuota('sugerencia')`)
+ok(await cuenta(`select count(*)::int n from privado.topes_alcanzados`) === 1, 'una sola vez por día y tipo')
+
 console.log('\n— Funciones —')
 await editor()
 const puede = async (rol, firma) => (await db.query(`select has_function_privilege($1, $2, 'execute') p`, [rol, firma])).rows[0].p
