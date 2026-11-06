@@ -5,10 +5,17 @@
 -- cuánto pesa, qué condiciones declara. Cada tabla lleva RLS y nadie ve filas
 -- que no sean suyas. No hay rol de administrador con acceso al diario ajeno.
 
--- En Supabase toda función nueva del esquema public nace ejecutable por anon
--- y authenticated, o sea por cualquiera con la clave pública. Aquí no: las que
--- la app llama se habilitan una por una al final de este archivo.
-alter default privileges in schema public revoke execute on functions from anon, authenticated;
+-- En Supabase toda tabla, secuencia y función nueva del esquema public nace
+-- abierta para anon y authenticated, o sea para cualquiera con la clave
+-- pública, y Postgres le da además execute a PUBLIC sobre toda función nueva.
+-- Aquí no: cada tabla recibe su grant explícito más abajo (y RLS decide las
+-- filas), y las funciones que la app llama se habilitan una por una al final.
+-- El revoke a PUBLIC va sin "in schema" porque los privilegios por defecto de
+-- un esquema solo suman a los globales. service_role conserva lo suyo.
+alter default privileges in schema public revoke all on tables from anon, authenticated;
+alter default privileges in schema public revoke all on sequences from anon, authenticated;
+alter default privileges in schema public revoke all on functions from anon, authenticated;
+alter default privileges revoke execute on functions from public;
 
 -- ---------------------------------------------------------------- perfiles --
 create table if not exists public.perfiles (
@@ -268,6 +275,16 @@ begin
   delete from auth.users where id = auth.uid();
 end;
 $$;
+
+-- -------------------------------------------------------------- tablas ----
+-- Las tablas de la app, con los permisos que usa la API. Qué filas ve o toca
+-- cada quien lo decide RLS. Si agregas una tabla, agrégala aquí y actívale RLS.
+grant select, insert, update, delete on
+  public.perfiles,
+  public.comidas,
+  public.pesos,
+  public.analisis_uso
+to anon, authenticated;
 
 -- ------------------------------------------------------------ funciones ----
 -- Nadie llama por la API a las funciones de este archivo, salvo las de abajo.

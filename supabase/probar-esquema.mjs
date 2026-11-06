@@ -131,6 +131,23 @@ await editor()
 const porDefecto = (await db.query(`select coalesce(array_agg(a::text), '{}') acl from pg_default_acl d, unnest(d.defaclacl) a
   where d.defaclobjtype = 'f' and d.defaclnamespace = 'public'::regnamespace`)).rows[0].acl
 ok(!porDefecto.some((a) => /^(anon|authenticated)=/.test(a)), 'una función nueva ya no nace abierta para anon ni authenticated')
+// Lo que se cree después (otra versión del esquema, el editor SQL del panel)
+// no nace abierto: una tabla sin RLS sería legible con la clave publicable.
+await db.exec(`create table public.tabla_nueva_de_prueba (id int);
+  create sequence public.secuencia_nueva_de_prueba;
+  create function public.funcion_nueva_de_prueba() returns int language sql as 'select 1'`)
+for (const rol of ['anon', 'authenticated']) {
+  const { rows: [p] } = await db.query(`select
+    has_table_privilege($1, 'public.tabla_nueva_de_prueba', 'select, insert, update, delete') tabla,
+    has_sequence_privilege($1, 'public.secuencia_nueva_de_prueba', 'usage, select, update') secuencia,
+    has_function_privilege($1, 'public.funcion_nueva_de_prueba()', 'execute') funcion`, [rol])
+  ok(!p.tabla && !p.secuencia && !p.funcion, `${rol} no usa una tabla, secuencia ni función nuevas (tabla ${p.tabla}, secuencia ${p.secuencia}, función ${p.funcion})`)
+}
+const { rows: [sr] } = await db.query(`select has_table_privilege('service_role', 'public.tabla_nueva_de_prueba', 'select') t,
+  has_function_privilege('service_role', 'public.funcion_nueva_de_prueba()', 'execute') f`)
+ok(sr.t && sr.f, 'service_role sigue con acceso a lo nuevo')
+await db.exec(`drop table public.tabla_nueva_de_prueba; drop sequence public.secuencia_nueva_de_prueba;
+  drop function public.funcion_nueva_de_prueba()`)
 
 console.log('\n— Borrar mi cuenta —')
 await como(ANA)
