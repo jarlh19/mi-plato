@@ -23,7 +23,7 @@ jobs:
     steps:
       # v5 en vez de v4: la v4 corre sobre Node 20, ya obsoleto, y GitHub la
       # está forzando a Node 24 con un aviso en cada corrida.
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       # Versión fija, la misma que la máquina donde se desarrolla. Con `stable`
       # a secas, el día que Flutter saque una versión nueva el CI cambiaría de
