@@ -1,0 +1,68 @@
+name: Seguridad
+
+# Dos revisiones que no dependen del lenguaje del proyecto:
+# - gitleaks busca secretos en todo el historial, no solo en el último commit,
+#   porque una clave borrada sigue en git para quien clone el repo.
+# - osv-scanner busca dependencias con vulnerabilidades conocidas. Va con
+#   --offline: baja la base pública de vulnerabilidades y compara aquí, así que
+#   la lista de dependencias no se manda a ningún servicio.
+# Las dos se bajan con versión fija y se comprueba su SHA-256 antes de
+# correrlas: si el archivo publicado cambiara, la corrida falla en vez de
+# ejecutar algo distinto. Subir de versión es cambiar las cuatro variables, con
+# las sumas tomadas de la lista oficial de cada versión.
+on:
+  pull_request:
+  push:
+    branches: [main]
+  # Cada lunes a las 7:00 de Lima, porque salen vulnerabilidades nuevas en
+  # dependencias que nadie tocó.
+  schedule:
+    - cron: "0 12 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  auditoria:
+    runs-on: ubuntu-24.04
+    env:
+      GITLEAKS_VERSION: 8.30.1
+      GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+      OSV_VERSION: 2.7.0
+      OSV_SHA256: 160c6253e2922e9e0a6a9771c5c4c40a4b3c6090b34a3cdd5e80c96cc2e4218b
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # Todo el historial, para que gitleaks lo recorra entero.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Bajar gitleaks y osv-scanner con su SHA-256
+        run: |
+          mkdir -p "$RUNNER_TEMP/bin" && cd "$RUNNER_TEMP/bin"
+          curl -fsSL -o gitleaks.tar.gz "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  gitleaks.tar.gz" | sha256sum -c -
+          tar -xzf gitleaks.tar.gz gitleaks
+          curl -fsSL -o osv-scanner "https://github.com/google/osv-scanner/releases/download/v${OSV_VERSION}/osv-scanner_linux_amd64"
+          echo "${OSV_SHA256}  osv-scanner" | sha256sum -c -
+          chmod +x gitleaks osv-scanner
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+
+      # --redact: si encuentra algo, el log dice dónde, nunca el valor.
+      - name: Secretos en el historial
+        run: gitleaks git --redact --no-banner --verbose .
+
+      # Sale con 1 si hay vulnerabilidades y con 128 si no encontró archivos de
+      # dependencias; lo segundo no es un fallo.
+      - name: Dependencias con vulnerabilidades conocidas
+        run: |
+          set +e
+          osv-scanner scan source -r --offline --download-offline-databases .
+          estado=$?
+          if [ "$estado" -eq 128 ]; then echo "No hay archivos de dependencias que revisar."; exit 0; fi
+          exit "$estado"
