@@ -408,16 +408,34 @@ class SbFotosRepo implements FotosRepo {
     }
   }
 
+  /// Storage devuelve como mucho una página por listado (100 por defecto).
+  /// Se lista y se borra por tandas desde el principio hasta que no quede
+  /// nada: quien guardó más de una página de fotos y borra su cuenta no puede
+  /// quedarse con fotos que después ya nadie tiene permiso de borrar.
+  static const _tanda = 100;
+
   @override
   Future<void> eliminarTodas(String perfilId) async {
     try {
-      final archivos = await _c.storage
-          .from(Config.bucketFotos)
-          .list(path: perfilId);
-      if (archivos.isEmpty) return;
-      await _c.storage.from(Config.bucketFotos).remove([
-        for (final a in archivos) '$perfilId/${a.name}',
-      ]);
+      final carpeta = _c.storage.from(Config.bucketFotos);
+      Set<String>? anterior;
+      while (true) {
+        final archivos = await carpeta.list(
+          path: perfilId,
+          searchOptions: const SearchOptions(limit: _tanda),
+        );
+        if (archivos.isEmpty) return;
+        final rutas = {for (final a in archivos) '$perfilId/${a.name}'};
+        // Si la misma tanda vuelve, Storage no está borrando: se corta en vez
+        // de dar vueltas para siempre, y el error llega a la pantalla.
+        if (anterior != null && rutas.containsAll(anterior)) {
+          throw ErrorApp(
+            'No se pudieron borrar todas tus fotos. Inténtalo de nuevo.',
+          );
+        }
+        await carpeta.remove(rutas.toList());
+        anterior = rutas;
+      }
     } catch (e) {
       _traducir(e);
     }
