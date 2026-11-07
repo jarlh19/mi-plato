@@ -76,6 +76,19 @@ extract it and spend with it.
 flutter run --dart-define=SUPABASE_URL=https://xxx.supabase.co --dart-define=SUPABASE_ANON_KEY=eyJ...
 ```
 
+### 4. Build for distribution
+
+```bash
+dart run tool/compilar_release.dart appbundle --dart-define=SUPABASE_URL=... --dart-define=SUPABASE_ANON_KEY=...
+```
+
+It is obfuscated, keeps the symbols in `~/simbolos-flutter/mi_plato/<version>`
+(outside the repo; errors are read with `flutter symbolize`) and refuses to
+build without the proper key in `android/key.properties` (outside git) or over
+the symbols of an already built version. Without that key,
+`flutter build --release` signs with the debug key: fine for testing on a
+phone, not for publishing.
+
 ## Structure
 
 ```

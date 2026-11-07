@@ -76,6 +76,18 @@ extraerla y gastar con ella.
 flutter run --dart-define=SUPABASE_URL=https://xxx.supabase.co --dart-define=SUPABASE_ANON_KEY=eyJ...
 ```
 
+### 4. Compilar para repartir
+
+```bash
+dart run tool/compilar_release.dart appbundle --dart-define=SUPABASE_URL=... --dart-define=SUPABASE_ANON_KEY=...
+```
+
+Sale ofuscado, guarda los símbolos en `~/simbolos-flutter/mi_plato/<versión>`
+(fuera del repo; con ellos se leen los errores con `flutter symbolize`) y se
+niega si falta la llave propia en `android/key.properties` (fuera de git) o si
+ya hay símbolos de esa versión. Sin esa llave, `flutter build --release` firma
+con la de depuración: sirve para probar en un celular, no para publicar.
+
 ## Estructura
 
 ```
