@@ -314,23 +314,8 @@ class SbSugerenciasRepo implements SugerenciasRepo {
     try {
       final res = await _c.functions.invoke(
         Config.funcionSugerencias,
-        body: {
-          'objetivo': perfil.objetivo.name,
-          'condiciones': [for (final c in perfil.condiciones) c.name],
-          'hueco': {
-            'kcal': hueco.kcal.round(),
-            'proteina': hueco.proteina.round(),
-            'carbohidratos': hueco.carbohidratos.round(),
-            'grasa': hueco.grasa.round(),
-            'fibra': hueco.fibra.round(),
-            'azucar_libre': hueco.azucarLibre.round(),
-            'saturada_libre': hueco.saturadaLibre.round(),
-            'sodio_libre': hueco.sodioLibre.round(),
-          },
-          'comidas_pendientes': [
-            for (final t in hueco.comidasPendientes) t.name,
-          ],
-        },
+        // Sin las condiciones de salud: ver pedidoDeSugerencias (ADR-0007).
+        body: pedidoDeSugerencias(objetivo: perfil.objetivo, hueco: hueco),
       );
       final datos = res.data;
       if (datos is! Map) {

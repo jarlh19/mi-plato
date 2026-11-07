@@ -1,7 +1,8 @@
 # ADR-0006: En las sugerencias el modelo propone y las reglas disponen
 
 ## Estado
-Aceptada
+Aceptada. Desde el ADR-0007, las condiciones de salud ya no van en el pedido:
+llega su efecto en los topes del hueco.
 
 ## Fecha
 2026-09-29

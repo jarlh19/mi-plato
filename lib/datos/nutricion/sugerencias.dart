@@ -84,6 +84,29 @@ HuecoDelDia huecoDelDia({
   );
 }
 
+/// Lo que se manda al modelo para pedir sugerencias. Recibe el objetivo y el
+/// hueco, no el perfil, a propósito: las condiciones de salud son datos
+/// sensibles y no salen del celular (ADR-0007). Su efecto sí sale, porque los
+/// topes del hueco ya vienen ajustados por ellas, y las reglas de
+/// [evaluarSugerencias] descartan lo que se pase.
+Map<String, Object> pedidoDeSugerencias({
+  required Objetivo objetivo,
+  required HuecoDelDia hueco,
+}) => {
+  'objetivo': objetivo.name,
+  'hueco': {
+    'kcal': hueco.kcal.round(),
+    'proteina': hueco.proteina.round(),
+    'carbohidratos': hueco.carbohidratos.round(),
+    'grasa': hueco.grasa.round(),
+    'fibra': hueco.fibra.round(),
+    'azucar_libre': hueco.azucarLibre.round(),
+    'saturada_libre': hueco.saturadaLibre.round(),
+    'sodio_libre': hueco.sodioLibre.round(),
+  },
+  'comidas_pendientes': [for (final t in hueco.comidasPendientes) t.name],
+};
+
 bool _yaPaso(TipoComida t, int hora) => switch (t) {
   TipoComida.desayuno => hora >= 11,
   TipoComida.almuerzo => hora >= 16,
